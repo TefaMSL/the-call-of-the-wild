@@ -381,29 +381,15 @@ const QUESTIONS = [
     id: "c1", part: "core", ch: "", type: "open",
     q: "ليه اختار Jack London إن بطل الرواية يكون كلب بدل إنسان؟ إيه اللي قدر يوصّله بالشكل ده؟",
     qEn: "Why did Jack London choose a dog rather than a human as the protagonist? What did this perspective uniquely achieve?",
-    model: "• الكلب ما بيخبّيش غريزته ولا بيتجمّل زي البشر، فالقارئ يشوف الغريزة عارية.
-• نقدر نتابع التحول من الحضارة للبرية من غير تعقيدات اجتماعية.
-• London كاتب من مدرسة الـ naturalism: البيئة والوراثة بتحكم في المصير.
-• القارئ بيتعاطف جداً مع حيوان، فقسوة الإنسان والطبيعة بتأثر أكتر.
-• السرد بيدخل أفكار باك (anthropomorphism خفيف) فبيقرّب لنا الفكرة.",
-    modelEn: "• A dog does not rationalize or disguise primal instincts, giving readers an unmasked view of nature.
-• Traces the stark regression from civilization to wild free of societal moralizing.
-• London writes from literary Naturalism: heredity and environment govern ultimate destiny.
-• Readers empathize deeply with a faithful animal, intensifying the cruelty of nature and humans.
-• Light anthropomorphism invites readers directly into Buck's sensory and instinctual awakening."
+    model: `• الكلب ما بيخبّيش غريزته ولا بيتجمّل زي البشر، فالقارئ يشوف الغريزة عارية.\n• نقدر نتابع التحول من الحضارة للبرية من غير تعقيدات اجتماعية.\n• London كاتب من مدرسة الـ naturalism: البيئة والوراثة بتحكم في المصير.\n• القارئ بيتعاطف جداً مع حيوان، فقسوة الإنسان والطبيعة بتأثر أكتر.\n• السرد بيدخل أفكار باك (anthropomorphism خفيف) فبيقرّب لنا الفكرة.`,
+    modelEn: `• A dog does not rationalize or disguise primal instincts, giving readers an unmasked view of nature.\n• Traces the stark regression from civilization to wild free of societal moralizing.\n• London writes from literary Naturalism: heredity and environment govern ultimate destiny.\n• Readers empathize deeply with a faithful animal, intensifying the cruelty of nature and humans.\n• Light anthropomorphism invites readers directly into Buck's sensory and instinctual awakening.`
   },
   {
     id: "c2", part: "core", ch: "I", type: "open",
     q: "الرواية بتقول عن باك بعد الهراوة: «He was beaten, but he was not broken». إيه الفرق بين إنك تتهزم وإنك تتكسر؟ وفين شفت الفرق ده تاني؟",
     qEn: "The novel says of Buck after the club: 'He was beaten, but he was not broken.' What is the difference between being beaten and being broken? Where else does this theme appear?",
-    model: "• Beaten: اتهزم جسدياً. Broken: اتكسرت إرادته وكرامته.
-• باك أطاع ظاهرياً لكن فضل بيراقب وبيتعلم، ودهاؤه صحي.
-• نفس الفكرة: Dave رفض ينفصل عن الشغل، Spitz حارب لآخر لحظة، وباك رفض يقوم لما Hal ضربه على الجليد.
-• في المقابل: الكلاب اللي كانت بتتذلل وتلحس إيد الراجل بعد الضرب هي اللي اتكسرت.",
-    modelEn: "• Beaten: Physical defeat of the body. Broken: Crushing of inner spirit, pride, and self-respect.
-• Buck bowed to superior force to survive, but remained watchful, proud, and defiant.
-• Mirrors Dave refusing to yield his harness, Spitz fighting to the last fang, and Buck defying Hal on rotting ice.
-• In contrast, dogs that groveled and licked the club-man's boots were truly broken."
+    model: `• Beaten: اتهزم جسدياً. Broken: اتكسرت إرادته وكرامته.\n• باك أطاع ظاهرياً لكن فضل بيراقب وبيتعلم، ودهاؤه صحي.\n• نفس الفكرة: Dave رفض ينفصل عن الشغل، Spitz حارب لآخر لحظة، وباك رفض يقوم لما Hal ضربه على الجليد.\n• في المقابل: الكلاب اللي كانت بتتذلل وتلحس إيد الراجل بعد الضرب هي اللي اتكسرت.`,
+    modelEn: `• Beaten: Physical defeat of the body. Broken: Crushing of inner spirit, pride, and self-respect.\n• Buck bowed to superior force to survive, but remained watchful, proud, and defiant.\n• Mirrors Dave refusing to yield his harness, Spitz fighting to the last fang, and Buck defying Hal on rotting ice.\n• In contrast, dogs that groveled and licked the club-man's boots were truly broken.`
   },
   {
     id: "c3", part: "core", ch: "VII", type: "open",
