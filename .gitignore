@@ -1,0 +1,16 @@
+# The Call of the Wild — .gitignore
+
+# Old single-file version (keep for reference)
+# نداء البرية.html
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+*.swp
+
+# Logs
+*.log
