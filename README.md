@@ -27,7 +27,7 @@ The Call of the Wild/
 │   ├── data.js         ← Questions bank & chapter data
 │   └── app.js          ← All app logic & rendering
 ├── assets/
-│   ├── Call of Wild.pdf ← The novel (downloadable)
+│   ├── call-of-the-wild.pdf ← The novel (downloadable)
 │   └── trailer.mp4     ← Video trailer
 └── .gitignore
 ```
