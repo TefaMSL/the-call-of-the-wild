@@ -745,23 +745,34 @@ function initPines() {
     });
   };
 
-  // Continuous spring physics loop for living trees
+  // Continuous spring physics loop for living trees — calm and gentle
   function windTick() {
-    currentLean += (targetLean - currentLean) * 0.075;
-    targetLean *= 0.95; // gentle damping back to zero
-    if (forest && Math.abs(currentLean) > 0.01) {
-      forest.style.setProperty('--tree-lean', (currentLean * 6).toFixed(2) + 'px');
-      forest.style.setProperty('--tree-skew', (currentLean * 0.7).toFixed(2) + 'deg');
+    currentLean += (targetLean - currentLean) * 0.04;
+    targetLean *= 0.96; // gentle damping back to zero
+    if (forest && Math.abs(currentLean) > 0.005) {
+      forest.style.setProperty('--tree-lean', (currentLean * 3.5).toFixed(2) + 'px');
+      forest.style.setProperty('--tree-skew', (currentLean * 0.45).toFixed(2) + 'deg');
     }
     requestAnimationFrame(windTick);
   }
   requestAnimationFrame(windTick);
 
+  // On smaller screens, soften dog opacity when scrolled past hero to keep text clear
+  function handleDogScroll() {
+    if (wolf && window.innerWidth < 1024) {
+      wolf.style.opacity = window.scrollY > 380 ? '0.2' : '1';
+    } else if (wolf) {
+      wolf.style.opacity = '1';
+    }
+  }
+  window.addEventListener('scroll', handleDogScroll, { passive: true });
+  window.addEventListener('resize', handleDogScroll, { passive: true });
+
   // Wolf click reaction
   if (wolf) {
     wolf.addEventListener('click', () => {
       wolf.classList.add('wolf-alert');
-      targetLean = (Math.random() > 0.5 ? 1 : -1) * 2.2; // gust ripple
+      targetLean = (Math.random() > 0.5 ? 1 : -1) * 1.5; // gentle gust ripple
       setTimeout(() => wolf.classList.remove('wolf-alert'), 1200);
     });
   }

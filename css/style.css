@@ -628,7 +628,7 @@ main { position: relative; z-index: 3; }
   background-position: -120px bottom;
   opacity: 0.42;
   filter: blur(1.5px) brightness(0.7);
-  animation: tree-sway-distant 14s ease-in-out infinite alternate;
+  animation: tree-sway-distant 28s ease-in-out infinite alternate;
   transform: translateX(calc(var(--tree-lean, 0px) * 0.35)) skewX(calc(var(--tree-skew, 0deg) * 0.35));
 }
 
@@ -640,7 +640,7 @@ main { position: relative; z-index: 3; }
   background-position: 180px bottom;
   opacity: 0.72;
   filter: brightness(0.85) blur(0.4px);
-  animation: tree-sway-mid 9.5s ease-in-out infinite alternate-reverse;
+  animation: tree-sway-mid 20s ease-in-out infinite alternate-reverse;
   transform: translateX(calc(var(--tree-lean, 0px) * 0.65)) skewX(calc(var(--tree-skew, 0deg) * 0.65));
 }
 
@@ -652,7 +652,7 @@ main { position: relative; z-index: 3; }
   background-position: 0 bottom;
   opacity: 0.98;
   filter: drop-shadow(0 -8px 22px rgba(0,0,0,0.65));
-  animation: tree-sway-foreground 6.2s ease-in-out infinite alternate;
+  animation: tree-sway-foreground 14.5s ease-in-out infinite alternate;
   transform: translateX(var(--tree-lean, 0px)) skewX(var(--tree-skew, 0deg));
 }
 
@@ -669,21 +669,21 @@ main { position: relative; z-index: 3; }
   opacity: 0.25;
 }
 
-/* Pure Horizontal Left/Right sway (يمين و شمال بدون حركة عمودية) */
+/* Pure Horizontal Left/Right sway (هادئ وجميل وبطيء) */
 @keyframes tree-sway-foreground {
-  0%   { transform: translateX(-18px) skewX(-1.3deg); }
-  50%  { transform: translateX(18px) skewX(1.3deg); }
-  100% { transform: translateX(-18px) skewX(-1.3deg); }
+  0%   { transform: translateX(-11px) skewX(-0.75deg); }
+  50%  { transform: translateX(11px) skewX(0.75deg); }
+  100% { transform: translateX(-11px) skewX(-0.75deg); }
 }
 @keyframes tree-sway-mid {
-  0%   { transform: translateX(14px) skewX(1.0deg); }
-  50%  { transform: translateX(-14px) skewX(-1.0deg); }
-  100% { transform: translateX(14px) skewX(1.0deg); }
+  0%   { transform: translateX(8px) skewX(0.5deg); }
+  50%  { transform: translateX(-8px) skewX(-0.5deg); }
+  100% { transform: translateX(8px) skewX(0.5deg); }
 }
 @keyframes tree-sway-distant {
-  0%   { transform: translateX(-9px) skewX(-0.5deg); }
-  50%  { transform: translateX(9px) skewX(0.5deg); }
-  100% { transform: translateX(-9px) skewX(-0.5deg); }
+  0%   { transform: translateX(-5px) skewX(-0.3deg); }
+  50%  { transform: translateX(5px) skewX(0.3deg); }
+  100% { transform: translateX(-5px) skewX(-0.3deg); }
 }
 
 /* Volumetric rays */
@@ -754,31 +754,28 @@ main { position: relative; z-index: 3; }
 }
 
 /* ============================================================
-   PHOTOREALISTIC BUCK THE DOG (CLEAN ISOLATED CUTOUT)
+   PHOTOREALISTIC BUCK THE DOG (FIXED WITH TREES, ENLARGED)
    ============================================================ */
 .wolf-lurker {
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  inset-inline-start: clamp(2%, 5vw, 8%);
-  width: clamp(150px, 15vw, 210px);
-  max-height: 210px;
+  inset-inline-start: clamp(20px, 4vw, 75px);
+  width: clamp(210px, 17vw, 275px);
+  max-height: 275px;
   aspect-ratio: 1 / 1;
   pointer-events: auto;
   z-index: 4;
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.35s ease;
 }
 .wolf-lurker:hover {
-  transform: translateY(-4px) scale(1.03);
+  transform: translateY(-6px) scale(1.03);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .wolf-lurker {
-    position: relative;
-    margin: 24px auto 0;
-    inset-inline-start: auto;
-    bottom: auto;
-    width: 170px;
-    max-height: 170px;
+    width: clamp(140px, 18vw, 190px);
+    max-height: 190px;
+    inset-inline-start: 12px;
   }
 }
 
