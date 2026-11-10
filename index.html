@@ -66,6 +66,33 @@
 <!-- Snow / particle canvas -->
 <canvas id="snow" aria-hidden="true"></canvas>
 
+<!-- Realistic Living Wilderness Forest Treeline (fixed at bottom across entire page) -->
+<div class="forest" id="forest" aria-hidden="true">
+  <!-- Ambient twilight backlight -->
+  <div class="forest-backlight"></div>
+
+  <!-- Layer 1: Distant misty pine treeline (slow horizontal breeze sway) -->
+  <div class="forest-layer forest-distant"></div>
+
+  <!-- Layer 2: Rolling valley mist -->
+  <div class="forest-mist forest-mist-a"></div>
+
+  <!-- Layer 3: Mid-depth pine treeline (horizontal living sway) -->
+  <div class="forest-layer forest-mid"></div>
+
+  <!-- Volumetric rays filtering through pine needles -->
+  <div class="forest-rays"></div>
+
+  <!-- Layer 4: Crisp foreground pine trees (horizontal wind gust sway) -->
+  <div class="forest-layer forest-main"></div>
+
+  <!-- Layer 5: Valley mist in front of tree trunks -->
+  <div class="forest-mist forest-mist-b"></div>
+
+  <!-- Bottom seamless blend -->
+  <div class="forest-blend"></div>
+</div>
+
 <!-- ============================================================
      HEADER
      ============================================================ -->
@@ -150,39 +177,9 @@
 
       </div><!-- /.hero-grid -->
 
-      <!-- Realistic Living Wilderness Forest & Photorealistic Timber Wolf -->
-      <div class="forest" id="forest" aria-hidden="true">
-        <!-- Ambient twilight backlight to illuminate pine branches -->
-        <div class="forest-backlight"></div>
-
-        <!-- Layer 1: Distant misty pine treeline (slow deep breeze sway) -->
-        <div class="forest-layer forest-distant"></div>
-
-        <!-- Layer 2: Rolling atmospheric valley mist -->
-        <div class="forest-mist forest-mist-a"></div>
-
-        <!-- Layer 3: Mid-depth pine treeline (offset phase living sway) -->
-        <div class="forest-layer forest-mid"></div>
-
-        <!-- Volumetric moonlight rays filtering through pine needles -->
-        <div class="forest-rays"></div>
-
-        <!-- Layer 4: Crisp foreground living pine trees with wind gust sway -->
-        <div class="forest-layer forest-main"></div>
-
-        <!-- Layer 5: Valley mist drifting in front of tree trunks -->
-        <div class="forest-mist forest-mist-b"></div>
-
-        <!-- Photorealistic Buck the Dog nestled in the lower pine forest -->
-        <div class="wolf-lurker" id="wolf-lurker" title="باك — كلب الشمال المخلص">
-          <!-- Backlit aura for clear dark mode illumination -->
-          <div class="wolf-aura"></div>
-          <!-- Photorealistic Buck the dog portrait with natural loyal eyes and fur -->
-          <img src="assets/buck-realistic.png" alt="Buck the dog in the Yukon forest" class="wolf-img" loading="eager">
-        </div>
-
-        <!-- Seamless dark bottom blend -->
-        <div class="forest-blend"></div>
+      <!-- Clean isolated cutout of Buck the dog resting at the treeline -->
+      <div class="wolf-lurker" id="wolf-lurker" title="باك — كلب الشمال المخلص">
+        <img src="assets/buck-realistic.png" alt="Buck the dog" class="wolf-img" loading="eager">
       </div>
     </div>
 

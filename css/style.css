@@ -580,81 +580,80 @@ main { position: relative; z-index: 3; }
 
 
 /* ============================================================
-   LIVING WILDERNESS FOREST TREELINE & REALISTIC TIMBER WOLF
+   LIVING WILDERNESS FOREST TREELINE (FIXED AT BOTTOM ACROSS SITE)
    ============================================================ */
 .forest {
-  position: absolute;
+  position: fixed;
   inset-inline: 0;
   bottom: 0;
-  height: 310px;
+  height: clamp(140px, 18vh, 230px);
   pointer-events: none;
   overflow: hidden;
-  z-index: 2;
+  z-index: 1;
 }
 
-/* Ambient twilight backlight to illuminate pine branches */
+/* Ambient twilight backlight */
 .forest-backlight {
   position: absolute;
   inset-inline: 0;
-  bottom: 30px;
-  height: 240px;
-  background: radial-gradient(ellipse 75% 55% at 50% 80%, rgba(140,205,255,0.24) 0%, rgba(60,120,180,0.08) 50%, transparent 75%);
+  bottom: 0;
+  height: 200px;
+  background: radial-gradient(ellipse 75% 55% at 50% 85%, rgba(140,205,255,0.2) 0%, rgba(60,120,180,0.06) 50%, transparent 75%);
   pointer-events: none;
   animation: backlight-pulse 8s ease-in-out infinite alternate;
 }
 [data-theme="light"] .forest-backlight {
-  background: radial-gradient(ellipse 75% 55% at 50% 80%, rgba(220,180,120,0.25) 0%, transparent 70%);
+  background: radial-gradient(ellipse 75% 55% at 50% 85%, rgba(220,180,120,0.2) 0%, transparent 70%);
 }
 @keyframes backlight-pulse {
-  0% { opacity: 0.75; transform: scaleY(0.96); }
-  100% { opacity: 1; transform: scaleY(1.04); }
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
 }
 
-/* Living Treeline Layers with 3-tier swaying physics & mouse wind reaction */
+/* Living Treeline Layers with PURE HORIZONTAL sway (يمين و شمال) */
 .forest-layer {
   position: absolute;
-  inset-inline: -6%;
+  inset-inline: -10%;
   bottom: 0;
   background-repeat: repeat-x;
   background-position: center bottom;
-  transform-origin: 50% 100%;
   will-change: transform;
 }
 
-/* Layer 1: Distant misty pine treeline (slow deep breeze sway) */
+/* Layer 1: Distant misty pine treeline */
 .forest-distant {
-  height: 240px;
+  height: 180px;
   background-image: url('../assets/pine-treeline.png');
-  background-size: auto 210px;
+  background-size: auto 160px;
   background-position: -120px bottom;
   opacity: 0.42;
   filter: blur(1.5px) brightness(0.7);
-  animation: tree-sway-distant 12s ease-in-out infinite alternate;
-  transform: rotate(calc(var(--tree-lean, 0deg) * 0.25)) skewX(calc(var(--tree-lean, 0deg) * 0.35));
+  animation: tree-sway-distant 14s ease-in-out infinite alternate;
+  transform: translateX(calc(var(--tree-lean, 0px) * 0.35)) skewX(calc(var(--tree-skew, 0deg) * 0.35));
 }
 
-/* Layer 2: Mid-depth pine treeline (offset phase living sway) */
+/* Layer 2: Mid-depth pine treeline */
 .forest-mid {
-  height: 275px;
+  height: 210px;
   background-image: url('../assets/pine-treeline.png');
-  background-size: auto 245px;
+  background-size: auto 190px;
   background-position: 180px bottom;
   opacity: 0.72;
   filter: brightness(0.85) blur(0.4px);
-  animation: tree-sway-mid 8.2s ease-in-out infinite alternate-reverse;
-  transform: rotate(calc(var(--tree-lean, 0deg) * 0.5)) skewX(calc(var(--tree-lean, 0deg) * 0.65));
+  animation: tree-sway-mid 9.5s ease-in-out infinite alternate-reverse;
+  transform: translateX(calc(var(--tree-lean, 0px) * 0.65)) skewX(calc(var(--tree-skew, 0deg) * 0.65));
 }
 
-/* Layer 3: Crisp main foreground pine forest with lively wind gust sway */
+/* Layer 3: Crisp main foreground pine forest */
 .forest-main {
-  height: 305px;
+  height: 235px;
   background-image: url('../assets/pine-treeline.png');
-  background-size: auto 290px;
+  background-size: auto 220px;
   background-position: 0 bottom;
   opacity: 0.98;
   filter: drop-shadow(0 -8px 22px rgba(0,0,0,0.65));
-  animation: tree-sway-foreground 5.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-  transform: rotate(calc(var(--tree-lean, 0deg) * 0.8)) skewX(var(--tree-lean, 0deg));
+  animation: tree-sway-foreground 6.2s ease-in-out infinite alternate;
+  transform: translateX(var(--tree-lean, 0px)) skewX(var(--tree-skew, 0deg));
 }
 
 [data-theme="light"] .forest-main {
@@ -670,30 +669,29 @@ main { position: relative; z-index: 3; }
   opacity: 0.25;
 }
 
-/* Realistic organic tree swaying keyframes */
+/* Pure Horizontal Left/Right sway (يمين و شمال بدون حركة عمودية) */
 @keyframes tree-sway-foreground {
-  0%, 100% { transform: rotate(0deg) skewX(0deg) scaleY(1); }
-  22% { transform: rotate(0.85deg) skewX(1.15deg) scaleY(1.002); }
-  48% { transform: rotate(-0.35deg) skewX(-0.45deg) scaleY(0.998); }
-  72% { transform: rotate(1.1deg) skewX(1.35deg) scaleY(1.003); }
-  88% { transform: rotate(-0.6deg) skewX(-0.75deg) scaleY(0.999); }
+  0%   { transform: translateX(-18px) skewX(-1.3deg); }
+  50%  { transform: translateX(18px) skewX(1.3deg); }
+  100% { transform: translateX(-18px) skewX(-1.3deg); }
 }
 @keyframes tree-sway-mid {
-  0%, 100% { transform: rotate(0deg) skewX(0deg); }
-  35% { transform: rotate(-0.75deg) skewX(-0.95deg); }
-  70% { transform: rotate(0.65deg) skewX(0.8deg); }
+  0%   { transform: translateX(14px) skewX(1.0deg); }
+  50%  { transform: translateX(-14px) skewX(-1.0deg); }
+  100% { transform: translateX(14px) skewX(1.0deg); }
 }
 @keyframes tree-sway-distant {
-  0%, 100% { transform: rotate(0deg) skewX(0deg); }
-  50% { transform: rotate(0.4deg) skewX(0.5deg); }
+  0%   { transform: translateX(-9px) skewX(-0.5deg); }
+  50%  { transform: translateX(9px) skewX(0.5deg); }
+  100% { transform: translateX(-9px) skewX(-0.5deg); }
 }
 
-/* Volumetric moonlight rays filtering through pine needles */
+/* Volumetric rays */
 .forest-rays {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  height: 260px;
+  height: 200px;
   pointer-events: none;
   background: repeating-linear-gradient(
     118deg,
@@ -723,16 +721,16 @@ main { position: relative; z-index: 3; }
   opacity: 0.6;
 }
 @keyframes rays-drift {
-  0% { transform: translateX(-4%) scaleX(0.96); opacity: 0.55; }
-  100% { transform: translateX(5%) scaleX(1.04); opacity: 0.85; }
+  0%   { transform: translateX(-4%); opacity: 0.55; }
+  100% { transform: translateX(5%);  opacity: 0.85; }
 }
 
-/* Rolling atmospheric valley mist */
+/* Rolling atmospheric valley mist (pure horizontal) */
 .forest-mist {
   position: absolute;
   inset-inline: -40%;
-  bottom: 18px;
-  height: 120px;
+  bottom: 12px;
+  height: 100px;
   pointer-events: none;
   background: radial-gradient(ellipse 55% 40% at 50% 50%, rgba(180,215,240,0.12) 0%, transparent 70%);
 }
@@ -740,23 +738,23 @@ main { position: relative; z-index: 3; }
   animation: mist-drift-a 26s ease-in-out infinite alternate;
 }
 .forest-mist-b {
-  bottom: 35px;
-  height: 95px;
+  bottom: 25px;
+  height: 80px;
   background: radial-gradient(ellipse 50% 35% at 50% 50%, rgba(200,230,255,0.09) 0%, transparent 65%);
   animation: mist-drift-b 34s ease-in-out infinite alternate-reverse;
   z-index: 5;
 }
 @keyframes mist-drift-a {
-  0% { transform: translateX(-12%) scaleY(0.95); }
-  100% { transform: translateX(12%) scaleY(1.05); }
+  0%   { transform: translateX(-12%); }
+  100% { transform: translateX(12%);  }
 }
 @keyframes mist-drift-b {
-  0% { transform: translateX(14%) scaleY(1.05); }
-  100% { transform: translateX(-14%) scaleY(0.95); }
+  0%   { transform: translateX(14%);  }
+  100% { transform: translateX(-14%); }
 }
 
 /* ============================================================
-   PHOTOREALISTIC BUCK THE DOG (CLEARLY VISIBLE, ZERO OVERLAP)
+   PHOTOREALISTIC BUCK THE DOG (CLEAN ISOLATED CUTOUT)
    ============================================================ */
 .wolf-lurker {
   position: absolute;
@@ -766,35 +764,17 @@ main { position: relative; z-index: 3; }
   max-height: 210px;
   aspect-ratio: 1 / 1;
   pointer-events: auto;
-  cursor: pointer;
   z-index: 4;
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1), filter 0.4s ease;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 .wolf-lurker:hover {
   transform: translateY(-4px) scale(1.03);
 }
 
-/* Atmospheric backlight aura for dark mode illumination */
 .wolf-aura {
-  position: absolute;
-  inset: 15% 15% 20% 15%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 190, 80, 0.32) 0%, rgba(140, 210, 255, 0.18) 50%, transparent 75%);
-  filter: blur(24px);
-  pointer-events: none;
-  z-index: 1;
-  animation: wolf-aura-pulse 5.5s ease-in-out infinite alternate;
-}
-[data-theme="light"] .wolf-aura {
-  background: radial-gradient(circle, rgba(255, 205, 130, 0.45) 0%, transparent 72%);
-  filter: blur(20px);
-}
-@keyframes wolf-aura-pulse {
-  0% { transform: scale(0.92); opacity: 0.55; }
-  100% { transform: scale(1.08); opacity: 0.95; }
+  display: none !important;
 }
 
-/* Photorealistic Buck the dog image with rim illumination */
 .wolf-img {
   position: relative;
   width: 100%;
@@ -802,41 +782,28 @@ main { position: relative; z-index: 3; }
   object-fit: contain;
   display: block;
   z-index: 2;
-  filter: drop-shadow(0 0 16px rgba(255, 190, 80, 0.35))
-          drop-shadow(0 8px 24px rgba(0, 0, 0, 0.85))
-          brightness(1.06) contrast(1.05);
-  transition: filter 0.4s ease, transform 0.4s ease;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.85));
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 [data-theme="light"] .wolf-img {
-  filter: drop-shadow(0 6px 16px rgba(40, 20, 5, 0.3))
-          brightness(0.98) contrast(1.05);
+  filter: drop-shadow(0 6px 16px rgba(40, 20, 5, 0.35));
 }
 .wolf-lurker:hover .wolf-img {
-  filter: drop-shadow(0 0 24px rgba(255, 195, 80, 0.65))
-          drop-shadow(0 10px 30px rgba(0, 0, 0, 0.95))
-          brightness(1.12);
-}
-.wolf-lurker.wolf-alert {
-  transform: translateY(-6px) scale(1.04);
-}
-.wolf-lurker.wolf-alert .wolf-img {
-  filter: drop-shadow(0 0 30px rgba(255, 185, 60, 0.85))
-          drop-shadow(0 12px 32px rgba(0, 0, 0, 1))
-          brightness(1.18);
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.95)) brightness(1.04);
 }
 
-/* Bottom seamless dark blend into #parts */
+/* Bottom seamless dark blend */
 .forest-blend {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  height: 75px;
-  background: linear-gradient(to bottom, transparent, rgba(6, 12, 24, 0.65) 45%, var(--night) 100%);
+  height: 50px;
+  background: linear-gradient(to bottom, transparent, rgba(6, 12, 24, 0.65) 100%);
   pointer-events: none;
   z-index: 7;
 }
 [data-theme="light"] .forest-blend {
-  background: linear-gradient(to bottom, transparent, rgba(253, 246, 227, 0.65) 45%, var(--night) 100%);
+  background: linear-gradient(to bottom, transparent, rgba(253, 246, 227, 0.65) 100%);
 }
 
 /* ============================================================

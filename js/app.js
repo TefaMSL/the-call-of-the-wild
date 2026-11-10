@@ -750,7 +750,8 @@ function initPines() {
     currentLean += (targetLean - currentLean) * 0.075;
     targetLean *= 0.95; // gentle damping back to zero
     if (forest && Math.abs(currentLean) > 0.01) {
-      forest.style.setProperty('--tree-lean', currentLean.toFixed(3) + 'deg');
+      forest.style.setProperty('--tree-lean', (currentLean * 6).toFixed(2) + 'px');
+      forest.style.setProperty('--tree-skew', (currentLean * 0.7).toFixed(2) + 'deg');
     }
     requestAnimationFrame(windTick);
   }
