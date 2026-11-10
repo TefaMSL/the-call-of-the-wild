@@ -8,6 +8,7 @@
 /* ---- helpers ---- */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const el = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
 const LAT = /[A-Za-zÀ-ÿ][A-Za-z0-9À-ÿ''\&\-,.?! ]*[A-Za-z0-9À-ÿ]|[A-Za-z]/g;
 
@@ -813,43 +814,56 @@ function initWorlds() {
    Continuous scroll tracking, clicking & dragging
    ============================================================ */
 function initSideWmeterScroll() {
-  const wmeter = el('side-wmeter');
-  const trackWrap = el('wm-track-wrap');
-  const track = el('wm-track');
-  const thumb = el('wm');
-  const fill = el('wm-fill');
-  const civBtn = el('wm-civ-btn');
-  const wildBtn = el('wm-wild-btn');
+  const wmeter = el('side-wmeter') || document.getElementById('side-wmeter');
+  const trackWrap = el('wm-track-wrap') || document.getElementById('wm-track-wrap');
+  const track = el('wm-track') || document.getElementById('wm-track');
+  const thumb = el('wm') || document.getElementById('wm');
+  const fill = el('wm-fill') || document.getElementById('wm-fill');
+  const civBtn = el('wm-civ-btn') || document.getElementById('wm-civ-btn');
+  const wildBtn = el('wm-wild-btn') || document.getElementById('wm-wild-btn');
   if (!wmeter || !track || !thumb) return;
 
   let isDragging = false;
   let rafId = null;
 
-  function getMaxScroll() {
-    return Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  function getScrollMetrics() {
+    const doc = document.documentElement;
+    const body = document.body;
+    const scrollY = window.pageYOffset || window.scrollY || doc.scrollTop || body.scrollTop || 0;
+    const docH = Math.max(
+      doc.scrollHeight, body.scrollHeight,
+      doc.offsetHeight, body.offsetHeight,
+      doc.clientHeight, body.clientHeight
+    );
+    const winH = window.innerHeight || doc.clientHeight || 800;
+    const maxScroll = Math.max(1, docH - winH);
+    return { scrollY, maxScroll, pct: Math.min(1, Math.max(0, scrollY / maxScroll)) };
   }
 
   function updateThumbFromScroll() {
     if (isDragging) return;
-    const maxScroll = getMaxScroll();
-    const scrollY = window.scrollY || window.pageYOffset || 0;
-    const pct = Math.min(1, Math.max(0, scrollY / maxScroll));
+    const { pct } = getScrollMetrics();
     const pct100 = (pct * 100).toFixed(2);
     thumb.style.top = pct100 + '%';
     if (fill) fill.style.height = pct100 + '%';
     thumb.setAttribute('aria-valuenow', Math.round(pct * 100));
   }
 
-  window.addEventListener('scroll', () => {
+  function onScroll() {
     if (rafId) cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(updateThumbFromScroll);
-  }, { passive: true });
+  }
 
+  window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', updateThumbFromScroll, { passive: true });
+
+  // Continuous sync check to ensure thumb position is always 100% accurate
+  setInterval(updateThumbFromScroll, 300);
   updateThumbFromScroll();
 
   function scrollToPct(pct, smooth = false) {
-    const maxScroll = getMaxScroll();
+    const { maxScroll } = getScrollMetrics();
     const targetY = pct * maxScroll;
     window.scrollTo({
       top: targetY,
@@ -861,6 +875,7 @@ function initSideWmeterScroll() {
     trackWrap.addEventListener('click', (e) => {
       if (e.target === thumb) return;
       const rect = track.getBoundingClientRect();
+      if (rect.height <= 0) return;
       const clickY = e.clientY - rect.top;
       const pct = Math.min(1, Math.max(0, clickY / rect.height));
       scrollToPct(pct, true);
@@ -871,14 +886,16 @@ function initSideWmeterScroll() {
     isDragging = true;
     thumb.classList.add('dragging');
     document.body.classList.add('wm-dragging');
-    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
     window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
     e.preventDefault();
   }
 
   function onPointerMove(e) {
     if (!isDragging) return;
     const rect = track.getBoundingClientRect();
+    if (rect.height <= 0) return;
     const currentY = e.clientY - rect.top;
     const pct = Math.min(1, Math.max(0, currentY / rect.height));
     thumb.style.top = (pct * 100).toFixed(2) + '%';
@@ -893,6 +910,7 @@ function initSideWmeterScroll() {
     document.body.classList.remove('wm-dragging');
     window.removeEventListener('pointermove', onPointerMove);
     window.removeEventListener('pointerup', onPointerUp);
+    window.removeEventListener('pointercancel', onPointerUp);
   }
 
   thumb.addEventListener('pointerdown', onPointerDown);
@@ -904,7 +922,8 @@ function initSideWmeterScroll() {
   }
   if (wildBtn) {
     wildBtn.addEventListener('click', () => {
-      window.scrollTo({ top: getMaxScroll(), behavior: 'smooth' });
+      const { maxScroll } = getScrollMetrics();
+      window.scrollTo({ top: maxScroll, behavior: 'smooth' });
     });
   }
 }
