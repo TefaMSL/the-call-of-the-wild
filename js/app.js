@@ -23,6 +23,10 @@ function fmt(s) {
 }
 
 const AR  = ['أ', 'ب', 'ج', 'د', 'هـ'];
+const EN_LETTERS = ['A', 'B', 'C', 'D', 'E'];
+function optLetter(i) {
+  return LANG === 'en' ? (EN_LETTERS[i] || String.fromCharCode(65 + i)) : (AR[i] || String(i + 1));
+}
 const PAL = ['#ffa34d', '#7fd1ff', '#c3a6ff', '#7ff0c0', '#ffd86b'];
 const PCOL = ['#ffa34d', '#7fd1ff'];
 const SCORED = new Set(['forged', 'who', 'sort', 'board', 'meter']);
@@ -174,7 +178,7 @@ function bWho(q, r) {
   const optsH = `<div class="opts">${opts.map((op, i) => {
     let cls = 'opt';
     if (locked) { if (i === q.correct) cls += ' right'; else if (i === r.a) cls += ' wrong'; }
-    return `<button class="${cls}" data-act="who" data-i="${i}" ${locked?'disabled':''}><span class="k">${AR[i]}</span><span>${fmt(op)}</span></button>`;
+    return `<button class="${cls}" data-act="who" data-i="${i}" ${locked?'disabled':''}><span class="k">${optLetter(i)}</span><span>${fmt(op)}</span></button>`;
   }).join('')}</div>`;
   return bubble + optsH + (locked ? fb(r.ok, r.ok ? (LANG==='en'?'Correct!':'صح!') : (LANG==='en'?'Wrong':'غلط'), opts[q.correct], qWhy(q)) : hintHtml(q));
 }

@@ -1001,6 +1001,7 @@ main { position: relative; z-index: 3; }
 }
 .opt:not([disabled]):hover { border-color: var(--ember); background: rgba(255,163,77,.08); }
 .opt .k { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-size: .85rem; font-weight: 700; color: var(--mut); }
+[data-lang="en"] .opt .k { font-family: var(--f-en), sans-serif; font-size: 1rem; line-height: 1; }
 .opt.right { border-color: var(--good); background: rgba(111,224,165,.1); }
 .opt.wrong { border-color: var(--bad); background: rgba(255,112,112,.1); }
 .opt[disabled] { cursor: default; }
