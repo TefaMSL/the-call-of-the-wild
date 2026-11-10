@@ -662,24 +662,31 @@ main { position: relative; z-index: 3; }
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  height: 220px;
-  background: radial-gradient(
-    ellipse 90% 70% at 50% 100%,
-    rgba(20, 36, 62, 0.45) 0%,
-    rgba(12, 24, 44, 0.2) 50%,
-    rgba(6, 12, 24, 0.05) 80%,
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(24, 52, 90, 0.95) 0%,
+    rgba(28, 60, 102, 0.78) 30%,
+    rgba(32, 70, 115, 0.52) 58%,
+    rgba(26, 54, 90, 0.25) 78%,
+    rgba(14, 30, 55, 0.08) 90%,
     transparent 100%
   );
+  mask-image: linear-gradient(to top, black 65%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, black 65%, transparent 100%);
   pointer-events: none;
   animation: backlight-pulse 10s ease-in-out infinite alternate;
   z-index: 0;
 }
 [data-theme="light"] .forest-backlight {
+  height: 220px;
   background: radial-gradient(
     ellipse 85% 65% at 50% 90%,
     rgba(240, 200, 140, 0.22) 0%,
     transparent 75%
   );
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 @keyframes backlight-pulse {
   0% { opacity: 0.8; }
@@ -701,8 +708,8 @@ main { position: relative; z-index: 3; }
   height: 165px;
   background-image: url('../assets/pine-treeline.png');
   background-size: 520px 155px;
-  opacity: 0.45;
-  filter: blur(0.8px);
+  opacity: 0.65;
+  filter: brightness(1.45) contrast(1.05) blur(0.6px);
   animation: tree-drift-distant 130s linear infinite;
   transform: translateX(calc(var(--tree-lean, 0px) * 0.35)) skewX(calc(var(--tree-skew, 0deg) * 0.35));
 }
@@ -712,8 +719,8 @@ main { position: relative; z-index: 3; }
   height: 190px;
   background-image: url('../assets/pine-treeline.png');
   background-size: 640px 180px;
-  opacity: 0.75;
-  filter: drop-shadow(0 -2px 6px rgba(0, 0, 0, 0.5));
+  opacity: 0.88;
+  filter: brightness(1.35) contrast(1.1) drop-shadow(0 -1px 2.5px rgba(110, 180, 240, 0.28));
   animation: tree-drift-mid 90s linear infinite;
   transform: translateX(calc(var(--tree-lean, 0px) * 0.65)) skewX(calc(var(--tree-skew, 0deg) * 0.65));
 }
@@ -723,8 +730,8 @@ main { position: relative; z-index: 3; }
   height: 220px;
   background-image: url('../assets/pine-treeline.png');
   background-size: 760px 210px;
-  opacity: 0.98;
-  filter: drop-shadow(0 -4px 14px rgba(0, 0, 0, 0.75));
+  opacity: 1;
+  filter: brightness(1.28) contrast(1.12) drop-shadow(0 -1.5px 3px rgba(130, 195, 255, 0.38)) drop-shadow(0 -4px 12px rgba(0, 0, 0, 0.8));
   animation: tree-drift-foreground 60s linear infinite;
   transform: translateX(var(--tree-lean, 0px)) skewX(var(--tree-skew, 0deg));
 }
@@ -761,7 +768,7 @@ main { position: relative; z-index: 3; }
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  height: 200px;
+  height: 100%;
   pointer-events: none;
   background: repeating-linear-gradient(
     118deg,
@@ -772,6 +779,8 @@ main { position: relative; z-index: 3; }
     transparent 21%,
     transparent 32%
   );
+  mask-image: linear-gradient(to top, black 40%, transparent 85%);
+  -webkit-mask-image: linear-gradient(to top, black 40%, transparent 85%);
   mix-blend-mode: screen;
   opacity: 0.75;
   animation: rays-drift 18s ease-in-out infinite alternate;
@@ -787,6 +796,8 @@ main { position: relative; z-index: 3; }
     transparent 21%,
     transparent 32%
   );
+  mask-image: linear-gradient(to top, black 40%, transparent 85%);
+  -webkit-mask-image: linear-gradient(to top, black 40%, transparent 85%);
   mix-blend-mode: overlay;
   opacity: 0.6;
 }
