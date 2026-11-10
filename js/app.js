@@ -849,7 +849,7 @@ function initSnow() {
    ============================================================ */
 async function boot() {
   // Apply saved theme
-  const savedTheme = localStorage.getItem('cotw-theme') || 'dark';
+  const savedTheme = localStorage.getItem('cotw-theme') || 'light';
   document.documentElement.dataset.theme = savedTheme;
 
   // Apply saved language

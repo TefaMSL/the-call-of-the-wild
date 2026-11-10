@@ -592,98 +592,130 @@ main { position: relative; z-index: 3; }
   z-index: 1;
 }
 
+/* Horizon backlight glow behind trees for crisp visibility in Dark Mode */
+.forest-horizon-glow {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: clamp(170px, 21vh, 250px);
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(14, 28, 54, 0.95) 0%,
+    rgba(20, 44, 82, 0.8) 32%,
+    rgba(32, 75, 132, 0.52) 60%,
+    rgba(46, 115, 182, 0.24) 82%,
+    rgba(68, 155, 222, 0.08) 94%,
+    transparent 100%
+  );
+  z-index: 0;
+}
+[data-theme="light"] .forest-horizon-glow {
+  background: linear-gradient(
+    to top,
+    rgba(235, 222, 198, 0.88) 0%,
+    rgba(242, 232, 212, 0.45) 55%,
+    transparent 100%
+  );
+}
+
 /* Ambient twilight backlight */
 .forest-backlight {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  height: 200px;
-  background: radial-gradient(ellipse 75% 55% at 50% 85%, rgba(140,205,255,0.2) 0%, rgba(60,120,180,0.06) 50%, transparent 75%);
+  height: 230px;
+  background: radial-gradient(
+    ellipse 85% 65% at 50% 80%,
+    rgba(90, 180, 250, 0.34) 0%,
+    rgba(45, 115, 190, 0.18) 45%,
+    rgba(20, 55, 110, 0.07) 75%,
+    transparent 100%
+  );
   pointer-events: none;
-  animation: backlight-pulse 8s ease-in-out infinite alternate;
+  animation: backlight-pulse 9s ease-in-out infinite alternate;
+  z-index: 0;
 }
 [data-theme="light"] .forest-backlight {
-  background: radial-gradient(ellipse 75% 55% at 50% 85%, rgba(220,180,120,0.2) 0%, transparent 70%);
+  background: radial-gradient(
+    ellipse 85% 65% at 50% 80%,
+    rgba(240, 200, 140, 0.3) 0%,
+    transparent 75%
+  );
 }
 @keyframes backlight-pulse {
-  0% { opacity: 0.7; }
+  0% { opacity: 0.75; }
   100% { opacity: 1; }
 }
 
-/* Living Treeline Layers with PURE HORIZONTAL sway (يمين و شمال) */
+/* Treeline Layers with CONTINUOUS 1-DIRECTION SLOW DRIFT (عشان احس بمرور الوقت) */
 .forest-layer {
   position: absolute;
-  inset-inline: -10%;
+  inset-inline: 0;
   bottom: 0;
   background-repeat: repeat-x;
-  background-position: center bottom;
-  will-change: transform;
+  background-position: 0 bottom;
+  will-change: background-position, transform;
 }
 
-/* Layer 1: Distant misty pine treeline */
+/* Layer 1: Distant misty pine treeline (slowest, calmest horizon drift) */
 .forest-distant {
   height: 180px;
   background-image: url('../assets/pine-treeline.png');
-  background-size: auto 160px;
-  background-position: -120px bottom;
-  opacity: 0.42;
-  filter: blur(1.5px) brightness(0.7);
-  animation: tree-sway-distant 28s ease-in-out infinite alternate;
+  background-size: 520px 165px;
+  opacity: 0.65;
+  filter: brightness(1.15) drop-shadow(0 -1px 2px rgba(120, 190, 255, 0.35)) blur(0.6px);
+  animation: tree-drift-distant 130s linear infinite;
   transform: translateX(calc(var(--tree-lean, 0px) * 0.35)) skewX(calc(var(--tree-skew, 0deg) * 0.35));
 }
 
-/* Layer 2: Mid-depth pine treeline */
+/* Layer 2: Mid-depth pine treeline (mid-distance steady drift) */
 .forest-mid {
   height: 210px;
   background-image: url('../assets/pine-treeline.png');
-  background-size: auto 190px;
-  background-position: 180px bottom;
-  opacity: 0.72;
-  filter: brightness(0.85) blur(0.4px);
-  animation: tree-sway-mid 20s ease-in-out infinite alternate-reverse;
+  background-size: 640px 195px;
+  opacity: 0.88;
+  filter: drop-shadow(0 -1px 2.5px rgba(150, 215, 255, 0.45)) brightness(1.1) contrast(1.05);
+  animation: tree-drift-mid 90s linear infinite;
   transform: translateX(calc(var(--tree-lean, 0px) * 0.65)) skewX(calc(var(--tree-skew, 0deg) * 0.65));
 }
 
-/* Layer 3: Crisp main foreground pine forest */
+/* Layer 3: Crisp main foreground pine forest (prominent drift with silver moonlight rim) */
 .forest-main {
   height: 235px;
   background-image: url('../assets/pine-treeline.png');
-  background-size: auto 220px;
-  background-position: 0 bottom;
-  opacity: 0.98;
-  filter: drop-shadow(0 -8px 22px rgba(0,0,0,0.65));
-  animation: tree-sway-foreground 14.5s ease-in-out infinite alternate;
+  background-size: 760px 225px;
+  opacity: 1;
+  filter: drop-shadow(0 -1.5px 3.5px rgba(185, 230, 255, 0.7)) drop-shadow(0 -4px 14px rgba(70, 160, 240, 0.35)) brightness(1.15) contrast(1.1);
+  animation: tree-drift-foreground 60s linear infinite;
   transform: translateX(var(--tree-lean, 0px)) skewX(var(--tree-skew, 0deg));
 }
 
 [data-theme="light"] .forest-main {
-  filter: brightness(0.55) sepia(0.4) hue-rotate(15deg) drop-shadow(0 -4px 14px rgba(40,20,5,0.3));
-  opacity: 0.92;
+  filter: brightness(0.6) sepia(0.35) hue-rotate(15deg) drop-shadow(0 -4px 14px rgba(40,20,5,0.25));
+  opacity: 0.95;
 }
 [data-theme="light"] .forest-mid {
-  filter: brightness(0.65) sepia(0.3) blur(0.4px);
-  opacity: 0.55;
+  filter: brightness(0.7) sepia(0.28) blur(0.4px);
+  opacity: 0.65;
 }
 [data-theme="light"] .forest-distant {
-  filter: brightness(0.75) sepia(0.3) blur(1.5px);
-  opacity: 0.25;
+  filter: brightness(0.8) sepia(0.25) blur(1.2px);
+  opacity: 0.38;
 }
 
-/* Pure Horizontal Left/Right sway (هادئ وجميل وبطيء) */
-@keyframes tree-sway-foreground {
-  0%   { transform: translateX(-11px) skewX(-0.75deg); }
-  50%  { transform: translateX(11px) skewX(0.75deg); }
-  100% { transform: translateX(-11px) skewX(-0.75deg); }
+/* Continuous 1-Direction Drift Animations (Seamless Loop & Majestic Parallax) */
+@keyframes tree-drift-foreground {
+  0%   { background-position-x: 0; }
+  100% { background-position-x: -760px; }
 }
-@keyframes tree-sway-mid {
-  0%   { transform: translateX(8px) skewX(0.5deg); }
-  50%  { transform: translateX(-8px) skewX(-0.5deg); }
-  100% { transform: translateX(8px) skewX(0.5deg); }
+@keyframes tree-drift-mid {
+  0%   { background-position-x: 0; }
+  100% { background-position-x: -640px; }
 }
-@keyframes tree-sway-distant {
-  0%   { transform: translateX(-5px) skewX(-0.3deg); }
-  50%  { transform: translateX(5px) skewX(0.3deg); }
-  100% { transform: translateX(-5px) skewX(-0.3deg); }
+@keyframes tree-drift-distant {
+  0%   { background-position-x: 0; }
+  100% { background-position-x: -520px; }
 }
 
 /* Volumetric rays */
@@ -790,14 +822,14 @@ main { position: relative; z-index: 3; }
   object-fit: contain;
   display: block;
   z-index: 2;
-  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.85));
+  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 14px rgba(160, 215, 255, 0.32)) brightness(1.06);
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 [data-theme="light"] .wolf-img {
   filter: drop-shadow(0 6px 16px rgba(40, 20, 5, 0.35));
 }
 .wolf-lurker:hover .wolf-img {
-  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.95)) brightness(1.04);
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 18px rgba(180, 230, 255, 0.45)) brightness(1.1);
 }
 
 /* Bottom seamless dark blend */

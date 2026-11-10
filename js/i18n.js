@@ -190,8 +190,8 @@ const I18N = {
   }
 };
 
-let LANG = localStorage.getItem('cotw-lang') || 'ar';
-function t(key) { return (I18N[LANG] || I18N.ar)[key] || key; }
+let LANG = localStorage.getItem('cotw-lang') || 'en';
+function t(key) { return (I18N[LANG] || I18N.en)[key] || key; }
 function setLang(l) {
   LANG = l;
   localStorage.setItem('cotw-lang', l);

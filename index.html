@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="dark" data-lang="ar">
+<html lang="en" dir="ltr" data-theme="light" data-lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -8,7 +8,7 @@
   <title>The Call of the Wild</title>
   <meta name="description" content="An interactive literary journey through Jack London's The Call of the Wild. Explore Buck's transformation between civilization and the wild across 7 chapters.">
   <meta name="author" content="Jack London / Mohamed Elsayid">
-  <meta name="theme-color" content="#060c18">
+  <meta name="theme-color" content="#fdf6e3">
   <link rel="canonical" href="https://tefamsl.github.io/the-call-of-the-wild/">
 
   <!-- Favicon & Touch Icons -->
@@ -71,19 +71,22 @@
   <!-- Ambient twilight backlight -->
   <div class="forest-backlight"></div>
 
-  <!-- Layer 1: Distant misty pine treeline (slow horizontal breeze sway) -->
+  <!-- Soft horizon backlight for crisp dark mode visibility -->
+  <div class="forest-horizon-glow"></div>
+
+  <!-- Layer 1: Distant misty pine treeline (continuous slow 1-direction drift) -->
   <div class="forest-layer forest-distant"></div>
 
   <!-- Layer 2: Rolling valley mist -->
   <div class="forest-mist forest-mist-a"></div>
 
-  <!-- Layer 3: Mid-depth pine treeline (horizontal living sway) -->
+  <!-- Layer 3: Mid-depth pine treeline (continuous 1-direction drift) -->
   <div class="forest-layer forest-mid"></div>
 
   <!-- Volumetric rays filtering through pine needles -->
   <div class="forest-rays"></div>
 
-  <!-- Layer 4: Crisp foreground pine trees (horizontal wind gust sway) -->
+  <!-- Layer 4: Crisp foreground pine trees (continuous 1-direction drift) -->
   <div class="forest-layer forest-main"></div>
 
   <!-- Layer 5: Valley mist in front of tree trunks -->
@@ -94,8 +97,8 @@
 </div>
 
 <!-- Photorealistic isolated Buck the dog fixed at bottom with the treeline -->
-<div class="wolf-lurker" id="wolf-lurker" title="باك — كلب الشمال المخلص">
-  <img src="assets/buck-isolated.png?v=11" alt="Buck the dog" class="wolf-img" loading="eager">
+<div class="wolf-lurker" id="wolf-lurker" title="Buck — The Loyal Dog of the North">
+  <img src="assets/buck-isolated.png?v=12" alt="Buck the dog" class="wolf-img" loading="eager">
 </div>
 
 <!-- ============================================================
@@ -103,19 +106,19 @@
      ============================================================ -->
 <header class="top" role="banner">
   <div class="top-in">
-    <div class="brand" id="brand-el">نداء البرية</div>
+    <div class="brand" id="brand-el">The Call of the Wild</div>
 
-    <nav class="tabs" role="tablist" aria-label="أقسام الموقع">
-      <button class="tab" role="tab" id="tab-quest" aria-selected="true"  data-tab="quest">الرحلة</button>
-      <button class="tab" role="tab" id="tab-room"  aria-selected="false" data-tab="room">غرفة المناقشة</button>
-      <button class="tab" role="tab" id="tab-key"   aria-selected="false" data-tab="key" hidden>مفتاح الإجابات</button>
+    <nav class="tabs" role="tablist" aria-label="Site sections">
+      <button class="tab" role="tab" id="tab-quest" aria-selected="true"  data-tab="quest">The Journey</button>
+      <button class="tab" role="tab" id="tab-room"  aria-selected="false" data-tab="room">Discussion Room</button>
+      <button class="tab" role="tab" id="tab-key"   aria-selected="false" data-tab="key" hidden>Answer Key</button>
     </nav>
 
     <!-- Wild-o-meter -->
-    <div class="wmeter" title="باك بين الحضارة والبرية">
-      <span id="wm-civ">حضارة</span>
+    <div class="wmeter" title="Buck between Civilization and the Wild">
+      <span id="wm-civ">Civilization</span>
       <i><b id="wm"></b></i>
-      <span id="wm-wild">برية</span>
+      <span id="wm-wild">Wild</span>
     </div>
 
     <!-- Sync chip -->
@@ -123,8 +126,8 @@
 
     <!-- Theme & Language toggles -->
     <div class="hdr-btns">
-      <button class="icon-btn" id="theme-btn" title="Toggle light/dark mode">🌙 داكن</button>
-      <button class="icon-btn" id="lang-btn"  title="Switch language">English</button>
+      <button class="icon-btn" id="theme-btn" title="Toggle light/dark mode">🌙 Dark</button>
+      <button class="icon-btn" id="lang-btn"  title="Switch language">عربي</button>
     </div>
   </div>
 
@@ -145,18 +148,17 @@
         <!-- ── LEFT/START: Text content ── -->
         <div class="hero-text">
           <div class="kicker" id="kicker-el">Jack London · 1903</div>
-          <h1 id="hero-h1">نداء البرية</h1>
-          <div class="en-t" id="hero-sub">THE CALL OF THE WILD</div>
+          <h1 id="hero-h1">The Call of the Wild</h1>
+          <div class="en-t" id="hero-sub">A TALE OF THE UNTAMED NORTH</div>
           <p class="lead" id="lead-el">
-            ده مش اختبار عادي. كل ما تتقدم، الدنيا حواليك بتبرد وبتتوحّش، زي ما حصل مع باك.
-            جاوب، وبعدين قارن إجاباتك بصاحبك في غرفة المناقشة.
+            This isn't an ordinary quiz. The further you go, the colder and wilder the world around you — just like it happened to Buck. Answer, then compare with a friend in the Discussion Room.
           </p>
 
           <!-- CTA buttons -->
           <div class="hero-actions">
-            <a class="cta" href="#p-sum" id="startbtn">ابدأ الرحلة</a>
-            <a class="cta ghost" href="assets/call-of-the-wild.pdf" download id="dl-pdf" target="_blank">تحميل الرواية PDF</a>
-            <a class="cta ghost" href="assets/trailer.mp4" id="watch-vid" target="_blank">شوف الفيديو</a>
+            <a class="cta" href="#p-sum" id="startbtn">Begin the Journey</a>
+            <a class="cta ghost" href="assets/call-of-the-wild.pdf" download id="dl-pdf" target="_blank">Download Novel PDF</a>
+            <a class="cta ghost" href="assets/trailer.mp4" id="watch-vid" target="_blank">Watch Trailer</a>
           </div>
 
           <!-- Chapter trail -->
