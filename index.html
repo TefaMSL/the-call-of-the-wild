@@ -122,29 +122,42 @@
 
       </div><!-- /.hero-grid -->
 
-      <!-- Realistic Wilderness Forest & Lurking Timber Wolf -->
-      <div class="forest" aria-hidden="true">
+      <!-- Realistic Living Wilderness Forest & Photorealistic Timber Wolf -->
+      <div class="forest" id="forest" aria-hidden="true">
         <!-- Ambient twilight backlight to illuminate pine branches -->
         <div class="forest-backlight"></div>
-        <!-- Distant misty pine treeline -->
+
+        <!-- Layer 1: Distant misty pine treeline (slow deep breeze sway) -->
         <div class="forest-layer forest-distant"></div>
-        <!-- Rolling atmospheric valley mist -->
+
+        <!-- Layer 2: Rolling atmospheric valley mist -->
         <div class="forest-mist forest-mist-a"></div>
-        <div class="forest-mist forest-mist-b"></div>
-        <!-- Crisp main pine forest treeline -->
+
+        <!-- Layer 3: Mid-depth pine treeline (offset phase living sway) -->
+        <div class="forest-layer forest-mid"></div>
+
+        <!-- Volumetric moonlight rays filtering through pine needles -->
+        <div class="forest-rays"></div>
+
+        <!-- Layer 4: Crisp foreground living pine trees with wind gust sway -->
         <div class="forest-layer forest-main"></div>
-        <!-- Lurking Wolf silhouette among the pines -->
-        <div class="wolf-lurker" title="A wild timber wolf watching from the pines">
-          <svg class="wolf-sil" viewBox="0 0 140 120" xmlns="http://www.w3.org/2000/svg">
-            <path class="wolf-path" d="M 0,120 C 15,105 24,94 30,82 C 26,76 22,66 20,54 C 18,40 22,24 29,12 C 33,5 37,3 41,9 C 46,18 50,30 53,40 C 58,37 64,36 70,36 C 76,36 82,37 87,40 C 90,30 94,18 99,9 C 103,3 107,5 111,12 C 118,24 122,40 120,54 C 118,66 114,76 110,82 C 116,94 125,105 140,120 Z"/>
-            <path class="wolf-snout" d="M 48,58 C 54,54 62,52 70,52 C 78,52 86,54 92,58 C 97,64 95,74 88,82 C 82,90 76,96 70,98 C 64,96 58,90 52,82 C 45,74 43,64 48,58 Z"/>
-            <path class="wolf-rim" d="M 22,54 C 20,40 23,25 30,12 C 33,5 37,3 41,9 C 46,18 50,30 53,40 M 87,40 C 90,30 94,18 99,9 C 103,3 107,5 111,12 C 117,25 120,40 118,54" fill="none" stroke="rgba(200,230,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
+
+        <!-- Layer 5: Valley mist drifting in front of tree trunks -->
+        <div class="forest-mist forest-mist-b"></div>
+
+        <!-- Majestic Photorealistic Timber Wolf emerging between pines -->
+        <div class="wolf-lurker" id="wolf-lurker" title="A wild timber wolf watching from the pines">
+          <!-- Backlit aura for clear dark mode illumination -->
+          <div class="wolf-aura"></div>
+          <!-- Photorealistic wolf portrait with seamless atmospheric feathering -->
+          <img src="assets/wolf-realistic.png" alt="A wild timber wolf in the Yukon forest" class="wolf-img" loading="eager">
+          <!-- Living glowing & tracking amber wolf eyes -->
           <div class="eyes" id="eyes">
             <i class="eye eye-left"></i>
             <i class="eye eye-right"></i>
           </div>
         </div>
+
         <!-- Seamless dark bottom blend -->
         <div class="forest-blend"></div>
       </div>

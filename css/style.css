@@ -570,13 +570,13 @@ main { position: relative; z-index: 3; }
 
 
 /* ============================================================
-   REALISTIC FOREST TREELINE & LURKING TIMBER WOLF
+   LIVING WILDERNESS FOREST TREELINE & REALISTIC TIMBER WOLF
    ============================================================ */
 .forest {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  height: 270px;
+  height: 310px;
   pointer-events: none;
   overflow: hidden;
   z-index: 2;
@@ -587,29 +587,134 @@ main { position: relative; z-index: 3; }
   position: absolute;
   inset-inline: 0;
   bottom: 30px;
-  height: 200px;
-  background: radial-gradient(ellipse 75% 50% at 50% 80%, rgba(140,195,240,0.18) 0%, rgba(60,110,160,0.06) 50%, transparent 75%);
+  height: 240px;
+  background: radial-gradient(ellipse 75% 55% at 50% 80%, rgba(140,205,255,0.24) 0%, rgba(60,120,180,0.08) 50%, transparent 75%);
   pointer-events: none;
+  animation: backlight-pulse 8s ease-in-out infinite alternate;
 }
 [data-theme="light"] .forest-backlight {
-  background: radial-gradient(ellipse 75% 50% at 50% 80%, rgba(200,160,100,0.2) 0%, transparent 70%);
+  background: radial-gradient(ellipse 75% 55% at 50% 80%, rgba(220,180,120,0.25) 0%, transparent 70%);
+}
+@keyframes backlight-pulse {
+  0% { opacity: 0.75; transform: scaleY(0.96); }
+  100% { opacity: 1; transform: scaleY(1.04); }
 }
 
-/* Distant misty pine treeline for 3D depth */
+/* Living Treeline Layers with 3-tier swaying physics & mouse wind reaction */
 .forest-layer {
   position: absolute;
-  inset-inline: 0;
+  inset-inline: -6%;
   bottom: 0;
   background-repeat: repeat-x;
   background-position: center bottom;
+  transform-origin: 50% 100%;
+  will-change: transform;
 }
+
+/* Layer 1: Distant misty pine treeline (slow deep breeze sway) */
 .forest-distant {
-  height: 220px;
+  height: 240px;
   background-image: url('../assets/pine-treeline.png');
-  background-size: auto 200px;
-  background-position: -160px bottom;
-  opacity: 0.35;
+  background-size: auto 210px;
+  background-position: -120px bottom;
+  opacity: 0.42;
   filter: blur(1.5px) brightness(0.7);
+  animation: tree-sway-distant 12s ease-in-out infinite alternate;
+  transform: rotate(calc(var(--tree-lean, 0deg) * 0.25)) skewX(calc(var(--tree-lean, 0deg) * 0.35));
+}
+
+/* Layer 2: Mid-depth pine treeline (offset phase living sway) */
+.forest-mid {
+  height: 275px;
+  background-image: url('../assets/pine-treeline.png');
+  background-size: auto 245px;
+  background-position: 180px bottom;
+  opacity: 0.72;
+  filter: brightness(0.85) blur(0.4px);
+  animation: tree-sway-mid 8.2s ease-in-out infinite alternate-reverse;
+  transform: rotate(calc(var(--tree-lean, 0deg) * 0.5)) skewX(calc(var(--tree-lean, 0deg) * 0.65));
+}
+
+/* Layer 3: Crisp main foreground pine forest with lively wind gust sway */
+.forest-main {
+  height: 305px;
+  background-image: url('../assets/pine-treeline.png');
+  background-size: auto 290px;
+  background-position: 0 bottom;
+  opacity: 0.98;
+  filter: drop-shadow(0 -8px 22px rgba(0,0,0,0.65));
+  animation: tree-sway-foreground 5.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  transform: rotate(calc(var(--tree-lean, 0deg) * 0.8)) skewX(var(--tree-lean, 0deg));
+}
+
+[data-theme="light"] .forest-main {
+  filter: brightness(0.55) sepia(0.4) hue-rotate(15deg) drop-shadow(0 -4px 14px rgba(40,20,5,0.3));
+  opacity: 0.92;
+}
+[data-theme="light"] .forest-mid {
+  filter: brightness(0.65) sepia(0.3) blur(0.4px);
+  opacity: 0.55;
+}
+[data-theme="light"] .forest-distant {
+  filter: brightness(0.75) sepia(0.3) blur(1.5px);
+  opacity: 0.25;
+}
+
+/* Realistic organic tree swaying keyframes */
+@keyframes tree-sway-foreground {
+  0%, 100% { transform: rotate(0deg) skewX(0deg) scaleY(1); }
+  22% { transform: rotate(0.85deg) skewX(1.15deg) scaleY(1.002); }
+  48% { transform: rotate(-0.35deg) skewX(-0.45deg) scaleY(0.998); }
+  72% { transform: rotate(1.1deg) skewX(1.35deg) scaleY(1.003); }
+  88% { transform: rotate(-0.6deg) skewX(-0.75deg) scaleY(0.999); }
+}
+@keyframes tree-sway-mid {
+  0%, 100% { transform: rotate(0deg) skewX(0deg); }
+  35% { transform: rotate(-0.75deg) skewX(-0.95deg); }
+  70% { transform: rotate(0.65deg) skewX(0.8deg); }
+}
+@keyframes tree-sway-distant {
+  0%, 100% { transform: rotate(0deg) skewX(0deg); }
+  50% { transform: rotate(0.4deg) skewX(0.5deg); }
+}
+
+/* Volumetric moonlight rays filtering through pine needles */
+.forest-rays {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 260px;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    118deg,
+    transparent 0%,
+    transparent 10%,
+    rgba(180, 225, 255, 0.03) 14%,
+    rgba(200, 235, 255, 0.075) 17%,
+    transparent 21%,
+    transparent 32%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.75;
+  animation: rays-drift 18s ease-in-out infinite alternate;
+  z-index: 3;
+}
+[data-theme="light"] .forest-rays {
+  background: repeating-linear-gradient(
+    118deg,
+    transparent 0%,
+    transparent 10%,
+    rgba(255, 225, 160, 0.05) 14%,
+    rgba(255, 235, 180, 0.09) 17%,
+    transparent 21%,
+    transparent 32%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+@keyframes rays-drift {
+  0% { transform: translateX(-4%) scaleX(0.96); opacity: 0.55; }
+  100% { transform: translateX(5%) scaleX(1.04); opacity: 0.85; }
 }
 
 /* Rolling atmospheric valley mist */
@@ -625,10 +730,11 @@ main { position: relative; z-index: 3; }
   animation: mist-drift-a 26s ease-in-out infinite alternate;
 }
 .forest-mist-b {
-  bottom: 40px;
-  height: 90px;
-  background: radial-gradient(ellipse 50% 35% at 50% 50%, rgba(200,230,255,0.08) 0%, transparent 65%);
+  bottom: 35px;
+  height: 95px;
+  background: radial-gradient(ellipse 50% 35% at 50% 50%, rgba(200,230,255,0.09) 0%, transparent 65%);
   animation: mist-drift-b 34s ease-in-out infinite alternate-reverse;
+  z-index: 5;
 }
 @keyframes mist-drift-a {
   0% { transform: translateX(-12%) scaleY(0.95); }
@@ -639,81 +745,108 @@ main { position: relative; z-index: 3; }
   100% { transform: translateX(-14%) scaleY(0.95); }
 }
 
-/* Crisp main pine forest treeline */
-.forest-main {
-  height: 260px;
-  background-image: url('../assets/pine-treeline.png');
-  background-size: auto 260px;
-  opacity: 0.98;
-  filter: drop-shadow(0 -6px 18px rgba(0,0,0,0.55));
-}
-[data-theme="light"] .forest-main {
-  filter: brightness(0.55) sepia(0.4) hue-rotate(15deg);
-  opacity: 0.92;
-}
-[data-theme="light"] .forest-distant {
-  filter: brightness(0.75) sepia(0.3) blur(1.5px);
-  opacity: 0.25;
-}
-
-/* Lurking wolf silhouette in the pine shadows */
+/* ============================================================
+   PHOTOREALISTIC TIMBER WOLF (CLEARLY VISIBLE IN DARK & LIGHT)
+   ============================================================ */
 .wolf-lurker {
   position: absolute;
-  bottom: 34px;
-  inset-inline-start: clamp(12%, 18vw, 24%);
-  width: 140px;
-  height: 120px;
+  bottom: 18px;
+  inset-inline-start: clamp(8%, 15vw, 22%);
+  width: clamp(230px, 24vw, 320px);
+  aspect-ratio: 1 / 1;
   pointer-events: auto;
   cursor: pointer;
-  z-index: 5;
-  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.92));
-  transition: transform 0.35s ease, filter 0.35s ease;
+  z-index: 6;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1), filter 0.4s ease;
 }
 .wolf-lurker:hover {
-  transform: translateY(-4px) scale(1.04);
-  filter: drop-shadow(0 8px 24px rgba(255,170,40,0.3)) drop-shadow(0 6px 20px rgba(0,0,0,0.95));
+  transform: translateY(-6px) scale(1.03);
 }
-.wolf-sil {
+
+/* Atmospheric backlight aura for dark mode visibility */
+.wolf-aura {
+  position: absolute;
+  inset: 12% 12% 18% 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(140, 210, 255, 0.38) 0%, rgba(255, 180, 70, 0.22) 45%, transparent 75%);
+  filter: blur(30px);
+  pointer-events: none;
+  z-index: 1;
+  animation: wolf-aura-pulse 5.5s ease-in-out infinite alternate;
+}
+[data-theme="light"] .wolf-aura {
+  background: radial-gradient(circle, rgba(255, 205, 130, 0.45) 0%, transparent 72%);
+  filter: blur(24px);
+}
+@keyframes wolf-aura-pulse {
+  0% { transform: scale(0.92); opacity: 0.6; }
+  100% { transform: scale(1.08); opacity: 0.95; }
+}
+
+/* Photorealistic wolf portrait image with rim illumination */
+.wolf-img {
+  position: relative;
   width: 100%;
   height: 100%;
+  object-fit: contain;
   display: block;
+  z-index: 2;
+  filter: drop-shadow(0 0 18px rgba(140, 215, 255, 0.42))
+          drop-shadow(0 10px 32px rgba(0, 0, 0, 0.95))
+          brightness(1.1) contrast(1.05);
+  transition: filter 0.4s ease, transform 0.4s ease;
 }
-.wolf-path { fill: #040810; }
-.wolf-snout { fill: #02050a; }
-[data-theme="light"] .wolf-path { fill: #2d1e10; }
-[data-theme="light"] .wolf-snout { fill: #1a1005; }
+[data-theme="light"] .wolf-img {
+  filter: drop-shadow(0 6px 20px rgba(40, 20, 5, 0.35))
+          brightness(0.95) contrast(1.08);
+}
+.wolf-lurker:hover .wolf-img {
+  filter: drop-shadow(0 0 26px rgba(255, 185, 60, 0.55))
+          drop-shadow(0 12px 36px rgba(0, 0, 0, 0.98))
+          brightness(1.15) contrast(1.08);
+}
+.wolf-lurker.wolf-alert {
+  transform: translateY(-8px) scale(1.05);
+}
+.wolf-lurker.wolf-alert .wolf-img {
+  filter: drop-shadow(0 0 35px rgba(255, 175, 45, 0.8))
+          drop-shadow(0 14px 40px rgba(0, 0, 0, 1))
+          brightness(1.22) contrast(1.12);
+}
+.wolf-lurker.wolf-alert .eye {
+  box-shadow: 0 0 24px 8px rgba(255, 195, 55, 1), 0 0 8px 3px #fff;
+}
 
-/* Glowing wolf eyes placed inside wolf eye sockets */
+/* Glowing, tracking amber wolf eyes */
 .eyes {
   position: absolute;
-  top: 56px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 16px;
+  inset: 0;
   pointer-events: none;
-  z-index: 6;
+  z-index: 7;
 }
 .eye {
-  width: 15px;
-  height: 9px;
+  position: absolute;
+  width: clamp(10px, 1.2vw, 15px);
+  height: clamp(6px, 0.75vw, 10px);
   border-radius: 50%;
-  background: radial-gradient(ellipse at 45% 45%, #fff6cc 0%, #ffb833 45%, #d46200 80%, rgba(212,98,0,0) 95%);
-  box-shadow: 0 0 14px 4px rgba(255, 170, 34, 0.72), 0 0 4px rgba(255, 240, 180, 0.95);
-  position: relative;
-  animation: blink 6.5s infinite;
-  display: inline-block;
+  background: radial-gradient(ellipse at 45% 45%, #fffdf0 0%, #ffc433 35%, #e67700 75%, rgba(230, 119, 0, 0) 95%);
+  box-shadow: 0 0 16px 5px rgba(255, 185, 45, 0.85), 0 0 5px 2px #fff6cc;
+  animation: eye-breathe 4s ease-in-out infinite alternate, blink 6.8s infinite;
 }
 .eye-left {
-  transform: rotate(7deg);
+  left: 42.3%;
+  top: 40.8%;
+  transform: translate(-50%, -50%) rotate(5deg) translate(var(--ex, 0px), var(--ey, 0px));
 }
 .eye-right {
-  transform: rotate(-7deg);
+  left: 57.8%;
+  top: 40.5%;
+  transform: translate(-50%, -50%) rotate(-5deg) translate(var(--ex, 0px), var(--ey, 0px));
 }
 .eye::after {
   content: "";
   position: absolute;
-  width: 4px;
+  width: 3.5px;
   height: 7px;
   border-radius: 50%;
   background: #110500;
@@ -722,9 +855,13 @@ main { position: relative; z-index: 3; }
   transform: translateY(var(--ey, 0px));
   box-shadow: 0 0 2px rgba(0,0,0,0.8);
 }
+@keyframes eye-breathe {
+  0% { box-shadow: 0 0 10px 3px rgba(255, 170, 30, 0.65), 0 0 3px #fff6cc; opacity: 0.85; }
+  100% { box-shadow: 0 0 22px 7px rgba(255, 195, 55, 0.98), 0 0 6px 2px #fff9e6; opacity: 1; }
+}
 @keyframes blink {
-  0%, 93%, 100% { transform: scaleY(1); }
-  96% { transform: scaleY(0.08); }
+  0%, 93%, 100% { transform: translate(-50%, -50%) scaleY(1); }
+  96% { transform: translate(-50%, -50%) scaleY(0.08); }
 }
 
 /* Bottom seamless dark blend into #parts */
@@ -1173,7 +1310,20 @@ details.cr .cells { display: grid; grid-template-columns: repeat(auto-fit, minma
    DYNAMIC EVOLVING WOLF BEAST CURSOR
    ============================================================ */
 @media (hover: hover) and (pointer: fine) {
-  body, button, a, input, textarea, .opt, .sent, .node, .rng, .tab, .delbtn, .chip, .wolf-lurker {
+  .custom-cursor-active,
+  .custom-cursor-active body,
+  .custom-cursor-active button,
+  .custom-cursor-active a,
+  .custom-cursor-active input,
+  .custom-cursor-active textarea,
+  .custom-cursor-active .opt,
+  .custom-cursor-active .sent,
+  .custom-cursor-active .node,
+  .custom-cursor-active .rng,
+  .custom-cursor-active .tab,
+  .custom-cursor-active .delbtn,
+  .custom-cursor-active .chip,
+  .custom-cursor-active .wolf-lurker {
     cursor: none !important;
   }
   #cursor-tracker {
@@ -1184,9 +1334,10 @@ details.cr .cells { display: grid; grid-template-columns: repeat(auto-fit, minma
     height: 44px;
     pointer-events: none;
     z-index: 999999;
+    opacity: 0;
     transform: translate3d(-100px, -100px, 0);
     will-change: transform;
-    transition: filter 0.25s ease;
+    transition: opacity 0.15s ease, filter 0.25s ease;
   }
   .cursor-glow {
     position: absolute;

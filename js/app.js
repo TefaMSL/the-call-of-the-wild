@@ -708,21 +708,60 @@ function initTrail() {
 }
 
 function initPines() {
-  const svg = $('#pines');
-  if (svg) svg.innerHTML = '';
-  // Wolf eyes follow pointer / cursor
+  const forest = document.getElementById('forest');
+  const wolf = document.getElementById('wolf-lurker');
   const eyes = $$('.eye');
+
+  // Living interactive wind simulation
+  let lastX = 0, lastTime = performance.now();
+  let currentLean = 0, targetLean = 0;
+
   const move = e => {
     const p = e.touches ? e.touches[0] : e;
+    const now = performance.now();
+    const dt = Math.max(16, now - lastTime);
+    const vx = (p.clientX - lastX) / (dt / 16);
+    lastX = p.clientX;
+    lastTime = now;
+
+    // Gust response: trees lean in direction of cursor movement
+    if (Math.abs(vx) > 0.5) {
+      targetLean = Math.max(-2.4, Math.min(2.4, targetLean + vx * 0.05));
+    }
+
+    // Wolf eyes track pointer / cursor
     eyes.forEach(el => {
       const r = el.getBoundingClientRect();
-      const dx = p.clientX-(r.left+r.width/2), dy = p.clientY-(r.top+r.height/2);
-      const d = Math.hypot(dx,dy)||1, k = Math.min(1, d/200);
-      el.style.setProperty('--ex', (dx/d*3*k).toFixed(1)+'px');
-      el.style.setProperty('--ey', (dy/d*2*k).toFixed(1)+'px');
+      const dx = p.clientX - (r.left + r.width / 2);
+      const dy = p.clientY - (r.top + r.height / 2);
+      const d = Math.hypot(dx, dy) || 1;
+      const k = Math.min(1, d / 220);
+      el.style.setProperty('--ex', (dx / d * 2.8 * k).toFixed(1) + 'px');
+      el.style.setProperty('--ey', (dy / d * 1.8 * k).toFixed(1) + 'px');
     });
   };
-  window.addEventListener('pointermove', move, { passive:true });
+
+  // Continuous spring physics loop for living trees
+  function windTick() {
+    currentLean += (targetLean - currentLean) * 0.075;
+    targetLean *= 0.95; // gentle damping back to zero
+    if (forest && Math.abs(currentLean) > 0.01) {
+      forest.style.setProperty('--tree-lean', currentLean.toFixed(3) + 'deg');
+    }
+    requestAnimationFrame(windTick);
+  }
+  requestAnimationFrame(windTick);
+
+  // Wolf click reaction
+  if (wolf) {
+    wolf.addEventListener('click', () => {
+      wolf.classList.add('wolf-alert');
+      targetLean = (Math.random() > 0.5 ? 1 : -1) * 2.2; // gust ripple
+      setTimeout(() => wolf.classList.remove('wolf-alert'), 1200);
+    });
+  }
+
+  window.addEventListener('pointermove', move, { passive: true });
 }
 
 /* ============================================================
@@ -919,25 +958,40 @@ function initCursor() {
     tracker.className = `stage-${stage}`;
   }
 
-  let mouseX = -100, mouseY = -100;
-  let curX = -100, curY = -100;
+  let isCursorVisible = false;
 
-  function updatePos() {
-    curX += (mouseX - curX) * 0.45;
-    curY += (mouseY - curY) * 0.45;
-    tracker.style.transform = `translate3d(${curX - 22}px, ${curY - 22}px, 0)`;
-    requestAnimationFrame(updatePos);
+  function onPointerMove(e) {
+    if (!isCursorVisible) {
+      isCursorVisible = true;
+      document.documentElement.classList.add('custom-cursor-active');
+      tracker.style.opacity = '1';
+    }
+    // Direct 1:1 hardware tracking with zero lag/delay
+    tracker.style.transform = `translate3d(${e.clientX - 22}px, ${e.clientY - 22}px, 0)`;
   }
-  requestAnimationFrame(updatePos);
 
-  window.addEventListener('pointermove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    setStage(getFerocityStage());
-  }, { passive: true });
+  window.addEventListener('pointermove', onPointerMove, { passive: true });
 
+  window.addEventListener('pointerenter', e => {
+    isCursorVisible = true;
+    document.documentElement.classList.add('custom-cursor-active');
+    tracker.style.transform = `translate3d(${e.clientX - 22}px, ${e.clientY - 22}px, 0)`;
+    tracker.style.opacity = '1';
+  });
+
+  window.addEventListener('pointerleave', () => {
+    tracker.style.opacity = '0';
+  });
+
+  // Calculate ferocity stage on scroll, throttled
+  let scrollThrottle = null;
   window.addEventListener('scroll', () => {
-    setStage(getFerocityStage());
+    if (!scrollThrottle) {
+      scrollThrottle = setTimeout(() => {
+        setStage(getFerocityStage());
+        scrollThrottle = null;
+      }, 60);
+    }
   }, { passive: true });
 
   const interactiveSelector = 'button, a, input, textarea, .opt, .sent, .node, .rng, .tab, .delbtn, .wolf-lurker';
@@ -976,3 +1030,6 @@ function initCursor() {
 
   setStage(0);
 }
+
+// Initialize cursor immediately without waiting for async boot
+initCursor();
