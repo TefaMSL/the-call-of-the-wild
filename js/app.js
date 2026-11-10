@@ -163,18 +163,59 @@ function bForged(q, r) {
   const locked = !!r;
   const sents = qSents(q);
   const prompt = LANG === 'en' ? 'Tap the forged sentence:' : 'اضغط على الجملة المزيفة:';
-  return '<div class="doc">' + (locked ? '<div class="stamp' + (r.ok?'.ok':'')+'">' + (r.ok ? t('real') : t('forged')) + '</div>' : '') +
+
+  let stampHtml = '';
+  if (locked) {
+    const stampClass = r.ok ? 'stamp ok' : 'stamp bad';
+    const stampText = r.ok
+      ? (LANG === 'en' ? 'SPOTTED ✓' : 'اكتشفتها ✓')
+      : (LANG === 'en' ? 'MISSED ✗' : 'فلتت منك ✗');
+    stampHtml = `<div class="${stampClass}">${stampText}</div>`;
+  }
+
+  const sentsHtml = sents.map((s, i) => {
+    let cls = 'sent';
+    let badgeHtml = '';
+    const isFake = (i === q.fake);
+    const wasPicked = (!r.ok && i === r.i);
+
+    if (locked) {
+      if (isFake) {
+        // The forged sentence is the CORRECT ANSWER to the quiz
+        cls += ' right';
+        badgeHtml = `<span class="sent-status-badge right">${LANG === 'en' ? 'Forged (Correct) ✓' : 'المزيفة (الصح) ✓'}</span>`;
+      } else if (wasPicked) {
+        // The user mistakenly picked this real sentence
+        cls += ' wrong';
+        badgeHtml = `<span class="sent-status-badge wrong">${LANG === 'en' ? 'Your Pick (Real) ✗' : 'اختيارك (حقيقية) ✗'}</span>`;
+      } else {
+        cls += ' dim';
+      }
+    }
+
+    return `<button class="${cls}" data-act="forge" data-i="${i}" ${locked ? 'disabled' : ''}>` +
+      `<span class="sent-num">${i + 1}</span>` +
+      `<span class="sent-txt">${fmt(s)}</span>` +
+      badgeHtml +
+      `</button>`;
+  }).join('');
+
+  return '<div class="doc">' +
+    stampHtml +
     `<div class="doc-instruction">${prompt}</div>` +
-    '<div class="sents-grid">' +
-    sents.map((s, i) => {
-      let cls = 'sent';
-      if (locked) { if (i === q.fake) cls += ' fake'; else if (!r.ok && i === r.i) cls += ' wrongpick'; }
-      return `<button class="${cls}" data-act="forge" data-i="${i}" ${locked?'disabled':''}>` +
-        `<span class="sent-num">${i + 1}</span>` +
-        `<span class="sent-txt">${fmt(s)}</span>` +
-        `</button>`;
-    }).join('') + '</div></div>' +
-    (locked ? fb(r.ok, r.ok ? (LANG==='en'?'You spotted it!':'اكتشفتها!') : (LANG==='en'?'That one is real':'الجملة دي حقيقية'), (LANG==='en'?'Truth: ':'الصح: ') + qTruth(q), qWhy(q)) : hintHtml(q));
+    `<div class="sents-grid">${sentsHtml}</div>` +
+    '</div>' +
+    (locked
+      ? fb(
+          r.ok,
+          r.ok 
+            ? (LANG === 'en' ? 'Great spot! You found the forged sentence' : 'ممتاز! اكتشفت الجملة المزيفة صح') 
+            : (LANG === 'en' ? 'That sentence is actually real in the novel!' : 'الجملة اللي اخترتها حقيقية وليست مزيفة!'),
+          (LANG === 'en' ? 'The Truth: ' : 'الحقيقة في الرواية: ') + qTruth(q),
+          qWhy(q)
+        )
+      : hintHtml(q)
+    );
 }
 
 function bWho(q, r) {
@@ -183,10 +224,25 @@ function bWho(q, r) {
   const bubble = `<div class="bubble" dir="ltr">${esc(q.quote)}</div>`;
   const optsH = `<div class="opts">${opts.map((op, i) => {
     let cls = 'opt';
-    if (locked) { if (i === q.correct) cls += ' right'; else if (i === r.a) cls += ' wrong'; }
-    return `<button class="${cls}" data-act="who" data-i="${i}" ${locked?'disabled':''}><span class="k">${optLetter(i)}</span><span>${fmt(op)}</span></button>`;
+    let badgeHtml = '';
+    if (locked) {
+      if (i === q.correct) {
+        cls += ' right';
+        badgeHtml = `<span class="opt-status-badge right">${LANG === 'en' ? 'Correct ✓' : 'صح ✓'}</span>`;
+      } else if (i === r.a) {
+        cls += ' wrong';
+        badgeHtml = `<span class="opt-status-badge wrong">${LANG === 'en' ? 'Your Pick ✗' : 'اختيارك ✗'}</span>`;
+      } else {
+        cls += ' dim';
+      }
+    }
+    return `<button class="${cls}" data-act="who" data-i="${i}" ${locked ? 'disabled' : ''}>` +
+      `<span class="k">${optLetter(i)}</span>` +
+      `<span>${fmt(op)}</span>` +
+      badgeHtml +
+      `</button>`;
   }).join('')}</div>`;
-  return bubble + optsH + (locked ? fb(r.ok, r.ok ? (LANG==='en'?'Correct!':'صح!') : (LANG==='en'?'Wrong':'غلط'), opts[q.correct], qWhy(q)) : hintHtml(q));
+  return bubble + optsH + (locked ? fb(r.ok, r.ok ? (LANG === 'en' ? 'Correct!' : 'صح!') : (LANG === 'en' ? 'Wrong' : 'غلط'), opts[q.correct], qWhy(q)) : hintHtml(q));
 }
 
 function bSort(q, r) {
