@@ -351,7 +351,7 @@ main { position: relative; z-index: 3; }
 .hero {
   position: relative;
   overflow: hidden;
-  padding-block: 60px clamp(280px, 32vh, 360px);
+  padding-block: 50px clamp(120px, 16vh, 180px);
 }
 
 /* Two-column grid */
@@ -769,6 +769,17 @@ main { position: relative; z-index: 3; }
 }
 .wolf-lurker:hover {
   transform: translateY(-4px) scale(1.03);
+}
+
+@media (max-width: 768px) {
+  .wolf-lurker {
+    position: relative;
+    margin: 24px auto 0;
+    inset-inline-start: auto;
+    bottom: auto;
+    width: 170px;
+    max-height: 170px;
+  }
 }
 
 .wolf-aura {
