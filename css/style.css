@@ -1268,23 +1268,51 @@ details.cr .cells { display: grid; grid-template-columns: repeat(auto-fit, minma
 [data-theme="light"] textarea { color: var(--fg); }
 
 /* ============================================================
+   TEXT SELECTION LOCK & IMAGE DRAG PREVENTION
+   ============================================================ */
+html,
+body,
+*,
+*::before,
+*::after {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+
+input,
+textarea {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+img {
+  -webkit-user-drag: none !important;
+  user-drag: none !important;
+}
+
+::selection {
+  background: transparent !important;
+  color: inherit !important;
+}
+::-moz-selection {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+/* ============================================================
    DYNAMIC EVOLVING WOLF BEAST CURSOR
    ============================================================ */
 @media (hover: hover) and (pointer: fine) {
-  .custom-cursor-active,
-  .custom-cursor-active body,
-  .custom-cursor-active button,
-  .custom-cursor-active a,
-  .custom-cursor-active input,
-  .custom-cursor-active textarea,
-  .custom-cursor-active .opt,
-  .custom-cursor-active .sent,
-  .custom-cursor-active .node,
-  .custom-cursor-active .rng,
-  .custom-cursor-active .tab,
-  .custom-cursor-active .delbtn,
-  .custom-cursor-active .chip,
-  .custom-cursor-active .wolf-lurker {
+  html,
+  body,
+  *,
+  *::before,
+  *::after {
     cursor: none !important;
   }
   #cursor-tracker {

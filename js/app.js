@@ -994,12 +994,24 @@ function initCursor() {
     }
   }, { passive: true });
 
-  const interactiveSelector = 'button, a, input, textarea, .opt, .sent, .node, .rng, .tab, .delbtn, .wolf-lurker';
+  const interactiveSelector = 'button, a, input, textarea, summary, label, .opt, .sent, .node, .rng, .tab, .delbtn, .plbtn, .chip, .wolf-lurker, [role="button"], .trail span, .action-btn, .btn';
   document.addEventListener('mouseover', e => {
     if (e.target.closest(interactiveSelector)) tracker.classList.add('hover');
   });
   document.addEventListener('mouseout', e => {
     if (e.target.closest(interactiveSelector)) tracker.classList.remove('hover');
+  });
+
+  // Block native text selection & drag-ghosts across the site (keep inputs functional)
+  document.addEventListener('selectstart', e => {
+    if (!e.target.closest('input, textarea')) {
+      e.preventDefault();
+    }
+  });
+  document.addEventListener('dragstart', e => {
+    if (e.target.tagName === 'IMG' || !e.target.closest('input, textarea')) {
+      e.preventDefault();
+    }
   });
 
   document.addEventListener('mousedown', e => {
