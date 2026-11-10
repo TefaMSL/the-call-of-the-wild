@@ -268,41 +268,106 @@ header.top {
 .tab[aria-selected="true"] { background: var(--ember); color: var(--ember-ink); }
 .tab:not([aria-selected="true"]):hover { color: var(--fg); background: rgba(255,255,255,.08); }
 
-/* Wild-o-meter */
-.wmeter {
+/* ============================================================
+   FLOATING SIDE WILD-O-METER (Civilization vs Wild indicator on the side of the screen)
+   ============================================================ */
+.side-wmeter {
+  position: fixed;
+  inset-inline-end: clamp(16px, 2.8vw, 36px);
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: .78rem;
-  color: var(--mut);
+  gap: 12px;
+  background: var(--glass2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 90;
   white-space: nowrap;
+  user-select: none;
+  transition: border-color .3s, box-shadow .3s, transform .3s;
 }
-.wmeter i {
-  display: block;
-  width: 96px;
+[data-theme="light"] .side-wmeter {
+  background: rgba(255, 248, 235, 0.92);
+  border: 1.5px solid rgba(160, 120, 60, 0.28);
+  box-shadow: 0 8px 28px rgba(100, 60, 10, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+.side-wmeter:hover {
+  border-color: var(--ember);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 0 20px rgba(255, 170, 68, 0.25);
+  transform: translateY(-50%) scale(1.03);
+}
+
+.wm-lbl {
+  font-size: .84rem;
+  font-weight: 700;
+  color: var(--mut);
+  letter-spacing: .02em;
+}
+[data-theme="light"] .wm-lbl {
+  color: #5c4320;
+}
+
+.wm-track {
+  position: relative;
+  width: 104px;
   height: 6px;
   border-radius: 3px;
-  background: linear-gradient(270deg, #ffb24f, #6fb7ff 55%, #c9d8ff);
-  position: relative;
-}
-/* Flip gradient in LTR (English) so warm=left, cold=right */
-[dir=ltr] .wmeter i {
   background: linear-gradient(90deg, #ffb24f, #6fb7ff 55%, #c9d8ff);
 }
-.wmeter b {
+[dir=rtl] .wm-track {
+  background: linear-gradient(270deg, #ffb24f, #6fb7ff 55%, #c9d8ff);
+}
+
+.wm-thumb {
   position: absolute;
   top: -4px;
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--fg);
-  border: 2px solid var(--night);
+  background: #0f1929;
+  border: 2px solid #ffffff;
   inset-inline-start: 0;
   transform: translateX(0);
-  transition: inset-inline-start 1.2s ease;
-  box-shadow: 0 0 8px rgba(255,170,68,.6);
+  transition: inset-inline-start 1.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+  box-shadow: 0 0 10px rgba(255, 170, 68, 0.8), 0 2px 6px rgba(0, 0, 0, 0.4);
 }
-[dir=rtl] .wmeter b { transform: translateX(50%); }
+[dir=rtl] .wm-thumb {
+  transform: translateX(50%);
+}
+[data-theme="light"] .wm-thumb {
+  background: #1e1305;
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(200, 100, 20, 0.7), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 1100px) {
+  .side-wmeter {
+    top: auto;
+    bottom: 20px;
+    inset-inline-end: 20px;
+    transform: none;
+    padding: 6px 14px;
+  }
+  .side-wmeter:hover {
+    transform: scale(1.03);
+  }
+}
+@media (max-width: 600px) {
+  .side-wmeter {
+    bottom: 12px;
+    inset-inline-end: 12px;
+    gap: 8px;
+    padding: 5px 12px;
+  }
+  .wm-track {
+    width: 75px;
+  }
+}
 
 /* Header buttons */
 .hdr-btns {
@@ -1348,7 +1413,6 @@ details.cr .cells { display: grid; grid-template-columns: repeat(auto-fit, minma
 @media(max-width:620px) {
   .tabs { order: 3; flex-basis: 100%; }
   .brand { font-size: 1.45rem; }
-  .wmeter { margin-inline-start: auto; }
   .hdr-btns { margin-inline-start: auto; }
   .board { column-gap: 36px; }
   .node { font-size: .82rem; padding: 8px; }

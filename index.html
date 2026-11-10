@@ -111,13 +111,6 @@
       <button class="tab" role="tab" id="tab-key"   aria-selected="false" data-tab="key" hidden>Answer Key</button>
     </nav>
 
-    <!-- Wild-o-meter -->
-    <div class="wmeter" title="Buck between Civilization and the Wild">
-      <span id="wm-civ">Civilization</span>
-      <i><b id="wm"></b></i>
-      <span id="wm-wild">Wild</span>
-    </div>
-
     <!-- Sync chip -->
     <span class="chip" id="sync" hidden></span>
 
@@ -131,6 +124,15 @@
   <!-- Progress bar -->
   <div class="pbar" role="progressbar" aria-label="Progress"><b id="pb"></b></div>
 </header>
+
+<!-- Floating Side Wild-o-meter (Civilization vs Wild indicator on the side of the screen) -->
+<aside class="side-wmeter" id="side-wmeter" title="Buck between Civilization and the Wild" aria-label="Wild-o-meter">
+  <span class="wm-lbl" id="wm-civ">Civilization</span>
+  <div class="wm-track">
+    <b class="wm-thumb" id="wm"></b>
+  </div>
+  <span class="wm-lbl" id="wm-wild">Wild</span>
+</aside>
 
 <!-- ============================================================
      MAIN CONTENT
