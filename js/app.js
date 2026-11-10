@@ -177,10 +177,10 @@ function bForged(q, r) {
   const sentsHtml = sents.map((s, i) => {
     let cls = 'sent';
     let badgeHtml = '';
-    const isFake = (i === q.fake);
-    const wasPicked = (!r.ok && i === r.i);
 
-    if (locked) {
+    if (locked && r) {
+      const isFake = (i === q.fake);
+      const wasPicked = (!r.ok && i === r.i);
       if (isFake) {
         // The forged sentence is the CORRECT ANSWER to the quiz
         cls += ' right';
