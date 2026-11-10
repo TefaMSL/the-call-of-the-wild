@@ -586,69 +586,42 @@ main { position: relative; z-index: 3; }
   position: fixed;
   inset-inline: 0;
   bottom: 0;
-  height: clamp(140px, 18vh, 230px);
+  height: clamp(240px, 28vh, 310px);
   pointer-events: none;
   overflow: hidden;
   z-index: 1;
 }
 
-/* Horizon backlight glow behind trees for crisp visibility in Dark Mode */
-.forest-horizon-glow {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  height: clamp(170px, 21vh, 250px);
-  pointer-events: none;
-  background: linear-gradient(
-    to top,
-    rgba(14, 28, 54, 0.95) 0%,
-    rgba(20, 44, 82, 0.8) 32%,
-    rgba(32, 75, 132, 0.52) 60%,
-    rgba(46, 115, 182, 0.24) 82%,
-    rgba(68, 155, 222, 0.08) 94%,
-    transparent 100%
-  );
-  z-index: 0;
-}
-[data-theme="light"] .forest-horizon-glow {
-  background: linear-gradient(
-    to top,
-    rgba(235, 222, 198, 0.88) 0%,
-    rgba(242, 232, 212, 0.45) 55%,
-    transparent 100%
-  );
-}
-
-/* Ambient twilight backlight */
+/* Ambient twilight backlight — perfectly seamless, no hard edges */
 .forest-backlight {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  height: 230px;
+  height: 220px;
   background: radial-gradient(
-    ellipse 85% 65% at 50% 80%,
-    rgba(90, 180, 250, 0.34) 0%,
-    rgba(45, 115, 190, 0.18) 45%,
-    rgba(20, 55, 110, 0.07) 75%,
+    ellipse 90% 70% at 50% 100%,
+    rgba(20, 36, 62, 0.45) 0%,
+    rgba(12, 24, 44, 0.2) 50%,
+    rgba(6, 12, 24, 0.05) 80%,
     transparent 100%
   );
   pointer-events: none;
-  animation: backlight-pulse 9s ease-in-out infinite alternate;
+  animation: backlight-pulse 10s ease-in-out infinite alternate;
   z-index: 0;
 }
 [data-theme="light"] .forest-backlight {
   background: radial-gradient(
-    ellipse 85% 65% at 50% 80%,
-    rgba(240, 200, 140, 0.3) 0%,
+    ellipse 85% 65% at 50% 90%,
+    rgba(240, 200, 140, 0.22) 0%,
     transparent 75%
   );
 }
 @keyframes backlight-pulse {
-  0% { opacity: 0.75; }
+  0% { opacity: 0.8; }
   100% { opacity: 1; }
 }
 
-/* Treeline Layers with CONTINUOUS 1-DIRECTION SLOW DRIFT (عشان احس بمرور الوقت) */
+/* Treeline Layers with CONTINUOUS 1-DIRECTION SLOW DRIFT (مرور الوقت بهدوء) */
 .forest-layer {
   position: absolute;
   inset-inline: 0;
@@ -660,33 +633,33 @@ main { position: relative; z-index: 3; }
 
 /* Layer 1: Distant misty pine treeline (slowest, calmest horizon drift) */
 .forest-distant {
-  height: 180px;
+  height: 165px;
   background-image: url('../assets/pine-treeline.png');
-  background-size: 520px 165px;
-  opacity: 0.65;
-  filter: brightness(1.15) drop-shadow(0 -1px 2px rgba(120, 190, 255, 0.35)) blur(0.6px);
+  background-size: 520px 155px;
+  opacity: 0.45;
+  filter: blur(0.8px);
   animation: tree-drift-distant 130s linear infinite;
   transform: translateX(calc(var(--tree-lean, 0px) * 0.35)) skewX(calc(var(--tree-skew, 0deg) * 0.35));
 }
 
 /* Layer 2: Mid-depth pine treeline (mid-distance steady drift) */
 .forest-mid {
-  height: 210px;
+  height: 190px;
   background-image: url('../assets/pine-treeline.png');
-  background-size: 640px 195px;
-  opacity: 0.88;
-  filter: drop-shadow(0 -1px 2.5px rgba(150, 215, 255, 0.45)) brightness(1.1) contrast(1.05);
+  background-size: 640px 180px;
+  opacity: 0.75;
+  filter: drop-shadow(0 -2px 6px rgba(0, 0, 0, 0.5));
   animation: tree-drift-mid 90s linear infinite;
   transform: translateX(calc(var(--tree-lean, 0px) * 0.65)) skewX(calc(var(--tree-skew, 0deg) * 0.65));
 }
 
-/* Layer 3: Crisp main foreground pine forest (prominent drift with silver moonlight rim) */
+/* Layer 3: Crisp main foreground pine forest (seamless, no clipped tips) */
 .forest-main {
-  height: 235px;
+  height: 220px;
   background-image: url('../assets/pine-treeline.png');
-  background-size: 760px 225px;
-  opacity: 1;
-  filter: drop-shadow(0 -1.5px 3.5px rgba(185, 230, 255, 0.7)) drop-shadow(0 -4px 14px rgba(70, 160, 240, 0.35)) brightness(1.15) contrast(1.1);
+  background-size: 760px 210px;
+  opacity: 0.98;
+  filter: drop-shadow(0 -4px 14px rgba(0, 0, 0, 0.75));
   animation: tree-drift-foreground 60s linear infinite;
   transform: translateX(var(--tree-lean, 0px)) skewX(var(--tree-skew, 0deg));
 }
@@ -822,14 +795,14 @@ main { position: relative; z-index: 3; }
   object-fit: contain;
   display: block;
   z-index: 2;
-  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 14px rgba(160, 215, 255, 0.32)) brightness(1.06);
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.85));
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 [data-theme="light"] .wolf-img {
   filter: drop-shadow(0 6px 16px rgba(40, 20, 5, 0.35));
 }
 .wolf-lurker:hover .wolf-img {
-  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 18px rgba(180, 230, 255, 0.45)) brightness(1.1);
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.95)) brightness(1.04);
 }
 
 /* Bottom seamless dark blend */
