@@ -733,7 +733,12 @@ if (document.fonts?.ready) document.fonts.ready.then(()=>$$('.q').forEach(c=>{if
    WORLDS
    ============================================================ */
 const WM = [4, 34, 64, 94];
-function setWorld(w) { $('#worlds').dataset.w = w; $('#wm').style.insetInlineStart = WM[w]+'%'; window.__w = w; }
+function setWorld(w) {
+  $('#worlds').dataset.w = w;
+  window.__w = w;
+  const wmEl = $('#wm');
+  if (wmEl) wmEl.dataset.world = w;
+}
 let worldObserver = null;
 function initWorlds() {
   if (worldObserver) {
@@ -745,6 +750,107 @@ function initWorlds() {
   const hero = $('.hero');
   if (hero) worldObserver.observe(hero);
   $$('.q[data-world]').forEach(q => worldObserver.observe(q));
+}
+
+/* ============================================================
+   VERTICAL WILD-O-METER SCROLL RAIL
+   Continuous scroll tracking, clicking & dragging
+   ============================================================ */
+function initSideWmeterScroll() {
+  const wmeter = el('side-wmeter');
+  const trackWrap = el('wm-track-wrap');
+  const track = el('wm-track');
+  const thumb = el('wm');
+  const fill = el('wm-fill');
+  const civBtn = el('wm-civ-btn');
+  const wildBtn = el('wm-wild-btn');
+  if (!wmeter || !track || !thumb) return;
+
+  let isDragging = false;
+  let rafId = null;
+
+  function getMaxScroll() {
+    return Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  }
+
+  function updateThumbFromScroll() {
+    if (isDragging) return;
+    const maxScroll = getMaxScroll();
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const pct = Math.min(1, Math.max(0, scrollY / maxScroll));
+    const pct100 = (pct * 100).toFixed(2);
+    thumb.style.top = pct100 + '%';
+    if (fill) fill.style.height = pct100 + '%';
+    thumb.setAttribute('aria-valuenow', Math.round(pct * 100));
+  }
+
+  window.addEventListener('scroll', () => {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(updateThumbFromScroll);
+  }, { passive: true });
+
+  window.addEventListener('resize', updateThumbFromScroll, { passive: true });
+  updateThumbFromScroll();
+
+  function scrollToPct(pct, smooth = false) {
+    const maxScroll = getMaxScroll();
+    const targetY = pct * maxScroll;
+    window.scrollTo({
+      top: targetY,
+      behavior: smooth ? 'smooth' : 'auto'
+    });
+  }
+
+  if (trackWrap) {
+    trackWrap.addEventListener('click', (e) => {
+      if (e.target === thumb) return;
+      const rect = track.getBoundingClientRect();
+      const clickY = e.clientY - rect.top;
+      const pct = Math.min(1, Math.max(0, clickY / rect.height));
+      scrollToPct(pct, true);
+    });
+  }
+
+  function onPointerDown(e) {
+    isDragging = true;
+    thumb.classList.add('dragging');
+    document.body.classList.add('wm-dragging');
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    e.preventDefault();
+  }
+
+  function onPointerMove(e) {
+    if (!isDragging) return;
+    const rect = track.getBoundingClientRect();
+    const currentY = e.clientY - rect.top;
+    const pct = Math.min(1, Math.max(0, currentY / rect.height));
+    thumb.style.top = (pct * 100).toFixed(2) + '%';
+    if (fill) fill.style.height = (pct * 100).toFixed(2) + '%';
+    scrollToPct(pct, false);
+  }
+
+  function onPointerUp() {
+    if (!isDragging) return;
+    isDragging = false;
+    thumb.classList.remove('dragging');
+    document.body.classList.remove('wm-dragging');
+    window.removeEventListener('pointermove', onPointerMove);
+    window.removeEventListener('pointerup', onPointerUp);
+  }
+
+  thumb.addEventListener('pointerdown', onPointerDown);
+
+  if (civBtn) {
+    civBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+  if (wildBtn) {
+    wildBtn.addEventListener('click', () => {
+      window.scrollTo({ top: getMaxScroll(), behavior: 'smooth' });
+    });
+  }
 }
 
 /* ============================================================
@@ -912,7 +1018,7 @@ async function boot() {
   document.documentElement.dir = I18N[LANG].dir;
 
   loadLocal();
-  initTrail(); initPines(); buildQuest(); initWorlds(); initSnow(); initStars(); initCursor(); updateChrome();
+  initTrail(); initPines(); buildQuest(); initWorlds(); initSideWmeterScroll(); initSnow(); initStars(); initCursor(); updateChrome();
 
   if (!S.name) $('#gate').hidden = true;
   await initCaps();

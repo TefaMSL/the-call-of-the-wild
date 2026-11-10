@@ -125,13 +125,20 @@
   <div class="pbar" role="progressbar" aria-label="Progress"><b id="pb"></b></div>
 </header>
 
-<!-- Floating Side Wild-o-meter (Civilization vs Wild indicator on the side of the screen) -->
-<aside class="side-wmeter" id="side-wmeter" title="Buck between Civilization and the Wild" aria-label="Wild-o-meter">
-  <span class="wm-lbl" id="wm-civ">Civilization</span>
-  <div class="wm-track">
-    <b class="wm-thumb" id="wm"></b>
+<!-- Vertical Side Wild-o-meter Scroll Rail (Replaces side scrollbar from Civilization to Wild) -->
+<aside class="side-wmeter" id="side-wmeter" title="Buck's Journey: Civilization to Wild (Scroll Rail)" aria-label="Wild-o-meter Scroll Rail">
+  <button class="wm-cap wm-cap-top" id="wm-civ-btn" type="button" title="Jump to Civilization (Top)">
+    <span class="wm-lbl" id="wm-civ">Civilization</span>
+  </button>
+  <div class="wm-track-wrap" id="wm-track-wrap" title="Scroll through Buck's Journey">
+    <div class="wm-track" id="wm-track">
+      <div class="wm-fill" id="wm-fill"></div>
+      <b class="wm-thumb" id="wm" tabindex="0" role="slider" aria-label="Wild-o-meter thumb" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></b>
+    </div>
   </div>
-  <span class="wm-lbl" id="wm-wild">Wild</span>
+  <button class="wm-cap wm-cap-bottom" id="wm-wild-btn" type="button" title="Jump to the Wild (Bottom)">
+    <span class="wm-lbl" id="wm-wild">Wild</span>
+  </button>
 </aside>
 
 <!-- ============================================================
