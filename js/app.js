@@ -162,12 +162,18 @@ function hintHtml(q) {
 function bForged(q, r) {
   const locked = !!r;
   const sents = qSents(q);
+  const prompt = LANG === 'en' ? 'Tap the forged sentence:' : 'اضغط على الجملة المزيفة:';
   return '<div class="doc">' + (locked ? '<div class="stamp' + (r.ok?'.ok':'')+'">' + (r.ok ? t('real') : t('forged')) + '</div>' : '') +
+    `<div class="doc-instruction">${prompt}</div>` +
+    '<div class="sents-grid">' +
     sents.map((s, i) => {
       let cls = 'sent';
       if (locked) { if (i === q.fake) cls += ' fake'; else if (!r.ok && i === r.i) cls += ' wrongpick'; }
-      return `<button class="${cls}" data-act="forge" data-i="${i}" ${locked?'disabled':''}>${fmt(s)}</button>`;
-    }).join('') + '</div>' +
+      return `<button class="${cls}" data-act="forge" data-i="${i}" ${locked?'disabled':''}>` +
+        `<span class="sent-num">${i + 1}</span>` +
+        `<span class="sent-txt">${fmt(s)}</span>` +
+        `</button>`;
+    }).join('') + '</div></div>' +
     (locked ? fb(r.ok, r.ok ? (LANG==='en'?'You spotted it!':'اكتشفتها!') : (LANG==='en'?'That one is real':'الجملة دي حقيقية'), (LANG==='en'?'Truth: ':'الصح: ') + qTruth(q), qWhy(q)) : hintHtml(q));
 }
 
@@ -310,7 +316,7 @@ function paintCard(id) {
     `<span>${typelbl(q.type)}</span></div>` +
     (title ? `<h3 class="q-t">${fmt(title)}</h3>` : '') +
     BODY[q.type](q, r);
-  if (q.type === 'board') drawStrings(el);
+  if (q.type === 'board') requestAnimationFrame(() => drawStrings(el));
 }
 
 function buildQuest() {
@@ -330,26 +336,31 @@ function buildQuest() {
 }
 
 function drawStrings(card) {
-  const b = $('.board', card); if (!b) return;
-  const svg = $('.strings', b), q = QBY[card.dataset.q], rec = S.answers[q.id];
-  const m = rec ? rec.m : ((D[q.id] && D[q.id].m) || {});
-  const br = b.getBoundingClientRect();
-  svg.setAttribute('viewBox', '0 0 ' + br.width + ' ' + br.height);
-  let h = '';
-  Object.keys(m).forEach(li => {
-    const L = $('[data-act=bl][data-i="' + li + '"]', b), R = $('[data-act=br][data-r="' + m[li] + '"]', b);
-    if (!L || !R) return;
-    const a = L.getBoundingClientRect(), c = R.getBoundingClientRect();
-    const flip = a.left > c.left;
-    const x1 = (flip ? a.left : a.right) - br.left, y1 = a.top + a.height / 2 - br.top;
-    const x2 = (flip ? c.right : c.left) - br.left, y2 = c.top + c.height / 2 - br.top;
-    const mx = (x1 + x2) / 2;
-    const wrong = rec && +m[li] !== +li;
-    const col = rec ? (wrong ? '#ff7070' : '#6fe0a5') : PAL[li % PAL.length];
-    h += `<path d="M${x1} ${y1} C ${mx} ${y1+18}, ${mx} ${y2+18}, ${x2} ${y2}" fill="none" stroke="${col}" stroke-width="2.8" stroke-linecap="round"${wrong?' stroke-dasharray="6 5"':''} filter="drop-shadow(0 0 3px ${col}88)"/>` +
-         `<circle cx="${x1}" cy="${y1}" r="5" fill="${col}"/><circle cx="${x2}" cy="${y2}" r="5" fill="${col}"/>`;
-  });
-  svg.innerHTML = h;
+  try {
+    const b = $('.board', card); if (!b) return;
+    const svg = $('.strings', b); if (!svg) return;
+    const q = QBY[card.dataset.q]; if (!q) return;
+    const rec = S.answers[q.id];
+    const m = rec ? rec.m : ((D[q.id] && D[q.id].m) || {});
+    const br = b.getBoundingClientRect();
+    if (!br.width || !br.height) return;
+    svg.setAttribute('viewBox', '0 0 ' + br.width + ' ' + br.height);
+    let h = '';
+    Object.keys(m).forEach(li => {
+      const L = $('[data-act=bl][data-i="' + li + '"]', b), R = $('[data-act=br][data-r="' + m[li] + '"]', b);
+      if (!L || !R) return;
+      const a = L.getBoundingClientRect(), c = R.getBoundingClientRect();
+      const flip = a.left > c.left;
+      const x1 = (flip ? a.left : a.right) - br.left, y1 = a.top + a.height / 2 - br.top;
+      const x2 = (flip ? c.right : c.left) - br.left, y2 = c.top + c.height / 2 - br.top;
+      const mx = (x1 + x2) / 2;
+      const wrong = rec && +m[li] !== +li;
+      const col = rec ? (wrong ? '#ff7070' : '#6fe0a5') : PAL[li % PAL.length];
+      h += `<path d="M${x1} ${y1} C ${mx} ${y1+18}, ${mx} ${y2+18}, ${x2} ${y2}" fill="none" stroke="${col}" stroke-width="2.8" stroke-linecap="round"${wrong?' stroke-dasharray="6 5"':''} filter="drop-shadow(0 0 3px ${col}88)"/>` +
+           `<circle cx="${x1}" cy="${y1}" r="5" fill="${col}"/><circle cx="${x2}" cy="${y2}" r="5" fill="${col}"/>`;
+    });
+    svg.innerHTML = h;
+  } catch (err) {}
 }
 
 /* ============================================================
@@ -633,14 +644,45 @@ $('#resetbtn').addEventListener('click', async e => {
 /* ============================================================
    LANGUAGE & THEME TOGGLES
    ============================================================ */
+let langSwitching = false;
 document.getElementById('lang-btn').addEventListener('click', () => {
-  setLang(LANG === 'ar' ? 'en' : 'ar');
-  document.documentElement.dataset.lang = LANG;
-  document.documentElement.dir = I18N[LANG].dir;
-  // Rebuild the entire quest content (direction/text changes)
-  buildQuest(); initTrail();
-  renderRoom(); renderKey();
-  updateChrome();
+  if (langSwitching) return;
+  langSwitching = true;
+  try {
+    const nextLang = LANG === 'ar' ? 'en' : 'ar';
+    setLang(nextLang);
+    document.documentElement.dataset.lang = nextLang;
+    document.documentElement.dir = I18N[nextLang].dir;
+
+    // Preserve any in-progress textarea drafts
+    $$('textarea[data-act="txt"]').forEach(ta => {
+      const card = ta.closest('.q');
+      if (card && card.dataset.q) {
+        const id = card.dataset.q;
+        D[id] = D[id] || {};
+        if (ta.id.startsWith('why-')) D[id].why = ta.value;
+        else D[id].text = ta.value;
+      }
+    });
+
+    // Rebuild the entire quest content (direction/text changes)
+    buildQuest();
+    initTrail();
+    initWorlds();
+    renderRoom();
+    renderKey();
+    updateChrome();
+
+    requestAnimationFrame(() => {
+      $$('.q').forEach(c => {
+        if (c.dataset.q && QBY[c.dataset.q] && QBY[c.dataset.q].type === 'board') drawStrings(c);
+      });
+    });
+  } catch (err) {
+    console.error('Language switch error:', err);
+  } finally {
+    setTimeout(() => { langSwitching = false; }, 200);
+  }
 });
 
 document.getElementById('theme-btn').addEventListener('click', () => {
@@ -692,13 +734,17 @@ if (document.fonts?.ready) document.fonts.ready.then(()=>$$('.q').forEach(c=>{if
    ============================================================ */
 const WM = [4, 34, 64, 94];
 function setWorld(w) { $('#worlds').dataset.w = w; $('#wm').style.insetInlineStart = WM[w]+'%'; window.__w = w; }
+let worldObserver = null;
 function initWorlds() {
-  const io = new IntersectionObserver(es => {
+  if (worldObserver) {
+    try { worldObserver.disconnect(); } catch(e) {}
+  }
+  worldObserver = new IntersectionObserver(es => {
     es.forEach(en => { if(en.isIntersecting) setWorld(en.target.classList.contains('hero') ? 0 : +en.target.dataset.world); });
   }, { rootMargin:'-45% 0px -50% 0px' });
-  io.observe($('.hero'));
-  $$('.q[data-world]').forEach(q => io.observe(q));
-  setWorld(0);
+  const hero = $('.hero');
+  if (hero) worldObserver.observe(hero);
+  $$('.q[data-world]').forEach(q => worldObserver.observe(q));
 }
 
 /* ============================================================
@@ -848,6 +894,14 @@ function initSnow() {
    BOOT
    ============================================================ */
 async function boot() {
+  // Clean up cache-busting search query (?v=...) from address bar so it never displays
+  if (window.location.search) {
+    try {
+      const cleanUrl = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, document.title, cleanUrl);
+    } catch(e) {}
+  }
+
   // Apply saved theme
   const savedTheme = localStorage.getItem('cotw-theme') || 'light';
   document.documentElement.dataset.theme = savedTheme;
